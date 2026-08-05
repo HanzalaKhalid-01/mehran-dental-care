@@ -1,7 +1,7 @@
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
 	"main": ".open-next/worker.js",
-	"name": "mehran-dental-erp",
+	"name": "mehran-dental-care",
 	"compatibility_date": "2026-08-04",
 	"compatibility_flags": [
 		"nodejs_compat",
