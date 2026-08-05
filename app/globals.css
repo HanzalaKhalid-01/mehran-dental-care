@@ -1,0 +1,39 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #12283f;
+
+  /* Brand palette — Mehran Dental Care */
+  --color-ink: #12283f;      /* deep navy — headlines, dark sections */
+  --color-teal: #0ea39d;     /* primary brand / CTA */
+  --color-teal-dark: #0b8580;
+  --color-mint: #eaf6f4;     /* light section tint */
+  --color-sand: #fff8ee;     /* warm alt section tint */
+  --color-marigold: #f2a93b; /* sparing accent */
+  --color-line: #e4e9ee;     /* hairline borders on light bg */
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-ink: var(--color-ink);
+  --color-teal: var(--color-teal);
+  --color-teal-dark: var(--color-teal-dark);
+  --color-mint: var(--color-mint);
+  --color-sand: var(--color-sand);
+  --color-marigold: var(--color-marigold);
+  --color-line: var(--color-line);
+  --font-display: var(--font-manrope);
+  --font-sans: var(--font-karla);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-karla), system-ui, sans-serif;
+}
+
+h1, h2, h3, h4, .font-display {
+  font-family: var(--font-manrope), system-ui, sans-serif;
+}
