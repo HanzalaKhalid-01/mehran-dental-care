@@ -43,7 +43,7 @@ export default async function PatientDetailPage({ params }: { params: Promise<{ 
             label="Message"
           />
           <Link
-            href={`/patients/${patient.id}/edit`}
+            href={`/portal/patients/${patient.id}/edit`}
             className="text-sm rounded-md border border-slate-300 px-3 py-1.5 font-medium hover:bg-slate-50"
           >
             Edit Details

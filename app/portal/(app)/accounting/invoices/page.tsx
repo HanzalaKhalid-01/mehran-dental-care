@@ -37,8 +37,46 @@ export default async function InvoicesPage() {
         <InvoiceForm patients={patients} />
       </div>
 
-      <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
-        <table className="w-full text-sm">
+      {/* Mobile: stacked cards */}
+      <div className="sm:hidden space-y-3">
+        {invoices.length === 0 && (
+          <div className="bg-white rounded-xl border border-slate-200 p-8 text-center text-slate-500">
+            No invoices yet.
+          </div>
+        )}
+        {invoices.map((inv) => (
+          <div key={inv.id} className="bg-white rounded-xl border border-slate-200 p-4">
+            <div className="flex items-start justify-between gap-3">
+              <div className="min-w-0">
+                <p className="font-medium truncate">{inv.patients?.full_name}</p>
+                <p className="text-sm text-slate-500 mt-0.5">{inv.invoice_no}</p>
+              </div>
+              <div className="text-right shrink-0">
+                <p className="font-medium whitespace-nowrap">Rs. {Number(inv.total).toLocaleString()}</p>
+                <p className="text-xs text-slate-400 capitalize mt-0.5">{inv.status}</p>
+              </div>
+            </div>
+            {inv.status !== "paid" && (
+              <div className="flex items-center gap-2 flex-wrap mt-3 pt-3 border-t border-slate-100">
+                <RecordPaymentButton invoiceId={inv.id} total={Number(inv.total)} />
+                {inv.patients?.phone && (
+                  <WhatsAppButton
+                    phone={inv.patients.phone}
+                    template="paymentReminder"
+                    args={[inv.patients.full_name, String(inv.total)]}
+                    label="Remind"
+                  />
+                )}
+                <DeleteButton table="invoices" id={inv.id} confirmLabel={`invoice ${inv.invoice_no}`} />
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {/* Tablet/desktop: table */}
+      <div className="hidden sm:block bg-white rounded-xl border border-slate-200 overflow-x-auto">
+        <table className="w-full text-sm min-w-[680px]">
           <thead className="bg-slate-50 text-left text-slate-500">
             <tr>
               <th className="px-4 py-3">Invoice #</th>
@@ -62,21 +100,23 @@ export default async function InvoicesPage() {
                 <td className="px-4 py-3 font-medium">{inv.patients?.full_name}</td>
                 <td className="px-4 py-3 text-right">Rs. {Number(inv.total).toLocaleString()}</td>
                 <td className="px-4 py-3 capitalize">{inv.status}</td>
-                <td className="px-4 py-3 flex gap-2">
-                  {inv.status !== "paid" && (
-                    <>
-                      <RecordPaymentButton invoiceId={inv.id} total={Number(inv.total)} />
-                      {inv.patients?.phone && (
-                        <WhatsAppButton
-                          phone={inv.patients.phone}
-                          template="paymentReminder"
-                          args={[inv.patients.full_name, String(inv.total)]}
-                          label="Remind"
-                        />
-                      )}
-                      <DeleteButton table="invoices" id={inv.id} confirmLabel={`invoice ${inv.invoice_no}`} />
-                    </>
-                  )}
+                <td className="px-4 py-3">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    {inv.status !== "paid" && (
+                      <>
+                        <RecordPaymentButton invoiceId={inv.id} total={Number(inv.total)} />
+                        {inv.patients?.phone && (
+                          <WhatsAppButton
+                            phone={inv.patients.phone}
+                            template="paymentReminder"
+                            args={[inv.patients.full_name, String(inv.total)]}
+                            label="Remind"
+                          />
+                        )}
+                        <DeleteButton table="invoices" id={inv.id} confirmLabel={`invoice ${inv.invoice_no}`} />
+                      </>
+                    )}
+                  </div>
                 </td>
               </tr>
             ))}

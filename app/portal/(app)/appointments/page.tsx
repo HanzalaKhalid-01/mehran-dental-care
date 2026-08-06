@@ -37,8 +37,44 @@ export default async function AppointmentsPage() {
         <AppointmentForm patients={patients} />
       </div>
 
-      <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
-        <table className="w-full text-sm">
+      {/* Mobile: stacked cards */}
+      <div className="sm:hidden space-y-3">
+        {appointments.length === 0 && (
+          <div className="bg-white rounded-xl border border-slate-200 p-8 text-center text-slate-500">
+            No appointments yet.
+          </div>
+        )}
+        {appointments.map((a) => (
+          <div key={a.id} className="bg-white rounded-xl border border-slate-200 p-4">
+            <div className="flex items-start justify-between gap-3">
+              <div className="min-w-0">
+                <p className="font-medium truncate">{a.patients?.full_name}</p>
+                <p className="text-sm text-slate-500 mt-0.5">
+                  {new Date(a.scheduled_at).toLocaleString()}
+                </p>
+              </div>
+            </div>
+            <div className="mt-3">
+              <AppointmentStatusSelect id={a.id} status={a.status} />
+            </div>
+            <div className="flex items-center gap-2 flex-wrap mt-3 pt-3 border-t border-slate-100">
+              {a.patients?.phone && (
+                <WhatsAppButton
+                  phone={a.patients.phone}
+                  template="appointmentReminder"
+                  args={[a.patients.full_name, new Date(a.scheduled_at).toLocaleString()]}
+                  label="Remind"
+                />
+              )}
+              <DeleteButton table="appointments" id={a.id} confirmLabel="this appointment" />
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Tablet/desktop: table */}
+      <div className="hidden sm:block bg-white rounded-xl border border-slate-200 overflow-x-auto">
+        <table className="w-full text-sm min-w-[640px]">
           <thead className="bg-slate-50 text-left text-slate-500">
             <tr>
               <th className="px-4 py-3">Patient</th>

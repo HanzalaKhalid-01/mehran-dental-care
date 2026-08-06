@@ -24,9 +24,9 @@ async function getStats() {
 }
 
 const StatCard = ({ label, value }: { label: string; value: string }) => (
-  <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
-    <p className="text-sm text-slate-500">{label}</p>
-    <p className="text-2xl font-semibold mt-1 text-[#1E3A5F]">{value}</p>
+  <div className="bg-white rounded-xl border border-slate-200 p-4 sm:p-5 shadow-sm min-w-0">
+    <p className="text-xs sm:text-sm text-slate-500 truncate">{label}</p>
+    <p className="text-xl sm:text-2xl font-semibold mt-1 text-[#1E3A5F] truncate">{value}</p>
   </div>
 );
 
