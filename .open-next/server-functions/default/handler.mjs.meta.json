@@ -3880,7 +3880,7 @@
       "format": "cjs"
     },
     ".open-next/server-functions/default/node_modules/next/dist/server/load-manifest.external.js": {
-      "bytes": 95456,
+      "bytes": 97732,
       "imports": [
         {
           "path": "path",
@@ -4530,8 +4530,8 @@
       "imports": [],
       "format": "cjs"
     },
-    ".open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__0ghdb2c._.js": {
-      "bytes": 12829,
+    ".open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__1z4oecf._.js": {
+      "bytes": 12105,
       "imports": [
         {
           "path": ".open-next/server-functions/default/node_modules/next/dist/shared/lib/no-fallback-error.external.js",
@@ -4541,13 +4541,18 @@
       ],
       "format": "cjs"
     },
+    ".open-next/server-functions/default/.next/server/chunks/ssr/_1sykv31._.js": {
+      "bytes": 7487,
+      "imports": [],
+      "format": "cjs"
+    },
     ".open-next/server-functions/default/.next/server/chunks/ssr/_next-internal_server_app_about_page_actions_0xvgj07.js": {
       "bytes": 116,
       "imports": [],
       "format": "cjs"
     },
-    ".open-next/server-functions/default/.next/server/chunks/ssr/node_modules_0_o0evb._.js": {
-      "bytes": 4124,
+    ".open-next/server-functions/default/.next/server/chunks/ssr/node_modules_next_0x3i8za._.js": {
+      "bytes": 52817,
       "imports": [],
       "format": "cjs"
     },
@@ -4561,8 +4566,8 @@
       "imports": [],
       "format": "cjs"
     },
-    ".open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__034l3hy._.js": {
-      "bytes": 12647,
+    ".open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__1cidwhd._.js": {
+      "bytes": 11923,
       "imports": [
         {
           "path": ".open-next/server-functions/default/node_modules/next/dist/shared/lib/no-fallback-error.external.js",
@@ -4775,8 +4780,8 @@
       "imports": [],
       "format": "cjs"
     },
-    ".open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__0a3yvpk._.js": {
-      "bytes": 17423,
+    ".open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__1zncstb._.js": {
+      "bytes": 16699,
       "imports": [
         {
           "path": ".open-next/server-functions/default/node_modules/next/dist/shared/lib/no-fallback-error.external.js",
@@ -4791,8 +4796,8 @@
       "imports": [],
       "format": "cjs"
     },
-    ".open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__0qgo5-4._.js": {
-      "bytes": 7184,
+    ".open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__0qdoavm._.js": {
+      "bytes": 8520,
       "imports": [
         {
           "path": ".open-next/server-functions/default/node_modules/next/dist/shared/lib/no-fallback-error.external.js",
@@ -4802,8 +4807,13 @@
       ],
       "format": "cjs"
     },
-    ".open-next/server-functions/default/.next/server/chunks/ssr/_0g5a_zj._.js": {
-      "bytes": 270448,
+    ".open-next/server-functions/default/.next/server/chunks/ssr/_0wng5vm._.js": {
+      "bytes": 7889,
+      "imports": [],
+      "format": "cjs"
+    },
+    ".open-next/server-functions/default/.next/server/chunks/ssr/_1a-0c_d._.js": {
+      "bytes": 217705,
       "imports": [],
       "format": "cjs"
     },
@@ -4812,13 +4822,8 @@
       "imports": [],
       "format": "cjs"
     },
-    ".open-next/server-functions/default/.next/server/chunks/ssr/_1ql1st3._.js": {
-      "bytes": 5093,
-      "imports": [],
-      "format": "cjs"
-    },
-    ".open-next/server-functions/default/.next/server/chunks/ssr/_20o0g2r._.js": {
-      "bytes": 3784,
+    ".open-next/server-functions/default/.next/server/chunks/ssr/_1s2w3t3._.js": {
+      "bytes": 886,
       "imports": [],
       "format": "cjs"
     },
@@ -4838,7 +4843,7 @@
       "format": "cjs"
     },
     ".open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__1cyp008._.js": {
-      "bytes": 6005,
+      "bytes": 6970,
       "imports": [
         {
           "path": ".open-next/server-functions/default/node_modules/next/dist/shared/lib/no-fallback-error.external.js",
@@ -4854,7 +4859,7 @@
       "format": "cjs"
     },
     ".open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__1vqc3_e._.js": {
-      "bytes": 8338,
+      "bytes": 9759,
       "imports": [
         {
           "path": ".open-next/server-functions/default/node_modules/next/dist/shared/lib/no-fallback-error.external.js",
@@ -4886,7 +4891,7 @@
       "format": "cjs"
     },
     ".open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__1o1d6ga._.js": {
-      "bytes": 6706,
+      "bytes": 7781,
       "imports": [
         {
           "path": ".open-next/server-functions/default/node_modules/next/dist/shared/lib/no-fallback-error.external.js",
@@ -4918,7 +4923,7 @@
       "format": "cjs"
     },
     ".open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__15gd4jt._.js": {
-      "bytes": 8206,
+      "bytes": 9376,
       "imports": [
         {
           "path": ".open-next/server-functions/default/node_modules/next/dist/shared/lib/no-fallback-error.external.js",
@@ -4939,7 +4944,7 @@
       "format": "cjs"
     },
     ".open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__21a_gf4._.js": {
-      "bytes": 5841,
+      "bytes": 5896,
       "imports": [
         {
           "path": ".open-next/server-functions/default/node_modules/next/dist/shared/lib/no-fallback-error.external.js",
@@ -4975,8 +4980,8 @@
       "imports": [],
       "format": "cjs"
     },
-    ".open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__1w6hf_0._.js": {
-      "bytes": 7172,
+    ".open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__08enm2c._.js": {
+      "bytes": 10427,
       "imports": [
         {
           "path": ".open-next/server-functions/default/node_modules/next/dist/shared/lib/no-fallback-error.external.js",
@@ -5028,8 +5033,8 @@
       ],
       "format": "cjs"
     },
-    ".open-next/server-functions/default/.next/server/chunks/ssr/_01i6jnn._.js": {
-      "bytes": 14401,
+    ".open-next/server-functions/default/.next/server/chunks/ssr/_1ezn49-._.js": {
+      "bytes": 16448,
       "imports": [],
       "format": "cjs"
     },
@@ -5043,8 +5048,8 @@
       "imports": [],
       "format": "cjs"
     },
-    ".open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__0l4skc9._.js": {
-      "bytes": 4656,
+    ".open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__1g20_-d._.js": {
+      "bytes": 7125,
       "imports": [
         {
           "path": ".open-next/server-functions/default/node_modules/next/dist/shared/lib/no-fallback-error.external.js",
@@ -5054,7 +5059,7 @@
       ],
       "format": "cjs"
     },
-    ".open-next/server-functions/default/.next/server/chunks/ssr/_1wpl67u._.js": {
+    ".open-next/server-functions/default/.next/server/chunks/ssr/_1iozm0q._.js": {
       "bytes": 6159,
       "imports": [],
       "format": "cjs"
@@ -5080,8 +5085,8 @@
       "imports": [],
       "format": "cjs"
     },
-    ".open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__0x1dd67._.js": {
-      "bytes": 12469,
+    ".open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__0llitjz._.js": {
+      "bytes": 11745,
       "imports": [
         {
           "path": ".open-next/server-functions/default/node_modules/next/dist/shared/lib/no-fallback-error.external.js",
@@ -5154,7 +5159,7 @@
       "format": "cjs"
     },
     ".open-next/server-functions/default/.next/server/chunks/[turbopack]_runtime.js": {
-      "bytes": 50492,
+      "bytes": 50695,
       "imports": [
         {
           "path": "worker_threads",
@@ -5247,9 +5252,14 @@
           "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/ssr/node_modules_next_dist_client_components_builtin_unauthorized_0l_sp0x.js"
         },
         {
-          "path": ".open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__0ghdb2c._.js",
+          "path": ".open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__1z4oecf._.js",
           "kind": "require-call",
-          "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__0ghdb2c._.js"
+          "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__1z4oecf._.js"
+        },
+        {
+          "path": ".open-next/server-functions/default/.next/server/chunks/ssr/_1sykv31._.js",
+          "kind": "require-call",
+          "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/ssr/_1sykv31._.js"
         },
         {
           "path": ".open-next/server-functions/default/.next/server/chunks/ssr/_next-internal_server_app_about_page_actions_0xvgj07.js",
@@ -5257,9 +5267,9 @@
           "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/ssr/_next-internal_server_app_about_page_actions_0xvgj07.js"
         },
         {
-          "path": ".open-next/server-functions/default/.next/server/chunks/ssr/node_modules_0_o0evb._.js",
+          "path": ".open-next/server-functions/default/.next/server/chunks/ssr/node_modules_next_0x3i8za._.js",
           "kind": "require-call",
-          "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/ssr/node_modules_0_o0evb._.js"
+          "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/ssr/node_modules_next_0x3i8za._.js"
         },
         {
           "path": ".open-next/server-functions/default/.next/server/chunks/ssr/node_modules_next_dist_01cjscx._.js",
@@ -5272,9 +5282,9 @@
           "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/ssr/node_modules_next_dist_client_components_builtin_global-error_0q-w892.js"
         },
         {
-          "path": ".open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__034l3hy._.js",
+          "path": ".open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__1cidwhd._.js",
           "kind": "require-call",
-          "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__034l3hy._.js"
+          "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__1cidwhd._.js"
         },
         {
           "path": ".open-next/server-functions/default/.next/server/chunks/ssr/_next-internal_server_app_contact_page_actions_0kuoobr.js",
@@ -5302,9 +5312,9 @@
           "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/_next-internal_server_app_favicon_ico_route_actions_0g2jjls.js"
         },
         {
-          "path": ".open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__0a3yvpk._.js",
+          "path": ".open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__1zncstb._.js",
           "kind": "require-call",
-          "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__0a3yvpk._.js"
+          "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__1zncstb._.js"
         },
         {
           "path": ".open-next/server-functions/default/.next/server/chunks/ssr/_next-internal_server_app_page_actions_0hhsz1j.js",
@@ -5312,14 +5322,19 @@
           "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/ssr/_next-internal_server_app_page_actions_0hhsz1j.js"
         },
         {
-          "path": ".open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__0qgo5-4._.js",
+          "path": ".open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__0qdoavm._.js",
           "kind": "require-call",
-          "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__0qgo5-4._.js"
+          "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__0qdoavm._.js"
         },
         {
-          "path": ".open-next/server-functions/default/.next/server/chunks/ssr/_0g5a_zj._.js",
+          "path": ".open-next/server-functions/default/.next/server/chunks/ssr/_0wng5vm._.js",
           "kind": "require-call",
-          "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/ssr/_0g5a_zj._.js"
+          "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/ssr/_0wng5vm._.js"
+        },
+        {
+          "path": ".open-next/server-functions/default/.next/server/chunks/ssr/_1a-0c_d._.js",
+          "kind": "require-call",
+          "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/ssr/_1a-0c_d._.js"
         },
         {
           "path": ".open-next/server-functions/default/.next/server/chunks/ssr/_1j6l_yv._.js",
@@ -5327,14 +5342,9 @@
           "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/ssr/_1j6l_yv._.js"
         },
         {
-          "path": ".open-next/server-functions/default/.next/server/chunks/ssr/_1ql1st3._.js",
+          "path": ".open-next/server-functions/default/.next/server/chunks/ssr/_1s2w3t3._.js",
           "kind": "require-call",
-          "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/ssr/_1ql1st3._.js"
-        },
-        {
-          "path": ".open-next/server-functions/default/.next/server/chunks/ssr/_20o0g2r._.js",
-          "kind": "require-call",
-          "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/ssr/_20o0g2r._.js"
+          "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/ssr/_1s2w3t3._.js"
         },
         {
           "path": ".open-next/server-functions/default/.next/server/chunks/ssr/_next-internal_server_app_portal_(app)_accounting_expenses_page_actions_0rsj8l0.js",
@@ -5437,9 +5447,9 @@
           "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/ssr/components_patients_PatientForm_tsx_1kw3kzp._.js"
         },
         {
-          "path": ".open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__1w6hf_0._.js",
+          "path": ".open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__08enm2c._.js",
           "kind": "require-call",
-          "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__1w6hf_0._.js"
+          "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__08enm2c._.js"
         },
         {
           "path": ".open-next/server-functions/default/.next/server/chunks/ssr/_next-internal_server_app_portal_(app)_patients_page_actions_19xpspq.js",
@@ -5472,9 +5482,9 @@
           "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__202-rf0._.js"
         },
         {
-          "path": ".open-next/server-functions/default/.next/server/chunks/ssr/_01i6jnn._.js",
+          "path": ".open-next/server-functions/default/.next/server/chunks/ssr/_1ezn49-._.js",
           "kind": "require-call",
-          "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/ssr/_01i6jnn._.js"
+          "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/ssr/_1ezn49-._.js"
         },
         {
           "path": ".open-next/server-functions/default/.next/server/chunks/ssr/_next-internal_server_app_portal_(app)_patients_[id]_page_actions_0jqc3ed.js",
@@ -5487,14 +5497,14 @@
           "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/ssr/components_whatsapp_WhatsAppButton_tsx_0eceija._.js"
         },
         {
-          "path": ".open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__0l4skc9._.js",
+          "path": ".open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__1g20_-d._.js",
           "kind": "require-call",
-          "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__0l4skc9._.js"
+          "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__1g20_-d._.js"
         },
         {
-          "path": ".open-next/server-functions/default/.next/server/chunks/ssr/_1wpl67u._.js",
+          "path": ".open-next/server-functions/default/.next/server/chunks/ssr/_1iozm0q._.js",
           "kind": "require-call",
-          "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/ssr/_1wpl67u._.js"
+          "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/ssr/_1iozm0q._.js"
         },
         {
           "path": ".open-next/server-functions/default/.next/server/chunks/ssr/_next-internal_server_app_portal_login_page_actions_10zvbin.js",
@@ -5512,9 +5522,9 @@
           "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/ssr/_next-internal_server_app_portal_page_actions_0a-9aey.js"
         },
         {
-          "path": ".open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__0x1dd67._.js",
+          "path": ".open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__0llitjz._.js",
           "kind": "require-call",
-          "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__0x1dd67._.js"
+          "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__0llitjz._.js"
         },
         {
           "path": ".open-next/server-functions/default/.next/server/chunks/ssr/_next-internal_server_app_services_page_actions_18c-f7f.js",
@@ -5545,7 +5555,7 @@
       "format": "cjs"
     },
     ".open-next/server-functions/default/.next/server/chunks/ssr/[turbopack]_runtime.js": {
-      "bytes": 50502,
+      "bytes": 50705,
       "imports": [
         {
           "path": "worker_threads",
@@ -5638,9 +5648,14 @@
           "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/ssr/node_modules_next_dist_client_components_builtin_unauthorized_0l_sp0x.js"
         },
         {
-          "path": ".open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__0ghdb2c._.js",
+          "path": ".open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__1z4oecf._.js",
           "kind": "require-call",
-          "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__0ghdb2c._.js"
+          "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__1z4oecf._.js"
+        },
+        {
+          "path": ".open-next/server-functions/default/.next/server/chunks/ssr/_1sykv31._.js",
+          "kind": "require-call",
+          "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/ssr/_1sykv31._.js"
         },
         {
           "path": ".open-next/server-functions/default/.next/server/chunks/ssr/_next-internal_server_app_about_page_actions_0xvgj07.js",
@@ -5648,9 +5663,9 @@
           "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/ssr/_next-internal_server_app_about_page_actions_0xvgj07.js"
         },
         {
-          "path": ".open-next/server-functions/default/.next/server/chunks/ssr/node_modules_0_o0evb._.js",
+          "path": ".open-next/server-functions/default/.next/server/chunks/ssr/node_modules_next_0x3i8za._.js",
           "kind": "require-call",
-          "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/ssr/node_modules_0_o0evb._.js"
+          "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/ssr/node_modules_next_0x3i8za._.js"
         },
         {
           "path": ".open-next/server-functions/default/.next/server/chunks/ssr/node_modules_next_dist_01cjscx._.js",
@@ -5663,9 +5678,9 @@
           "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/ssr/node_modules_next_dist_client_components_builtin_global-error_0q-w892.js"
         },
         {
-          "path": ".open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__034l3hy._.js",
+          "path": ".open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__1cidwhd._.js",
           "kind": "require-call",
-          "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__034l3hy._.js"
+          "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__1cidwhd._.js"
         },
         {
           "path": ".open-next/server-functions/default/.next/server/chunks/ssr/_next-internal_server_app_contact_page_actions_0kuoobr.js",
@@ -5693,9 +5708,9 @@
           "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/_next-internal_server_app_favicon_ico_route_actions_0g2jjls.js"
         },
         {
-          "path": ".open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__0a3yvpk._.js",
+          "path": ".open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__1zncstb._.js",
           "kind": "require-call",
-          "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__0a3yvpk._.js"
+          "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__1zncstb._.js"
         },
         {
           "path": ".open-next/server-functions/default/.next/server/chunks/ssr/_next-internal_server_app_page_actions_0hhsz1j.js",
@@ -5703,14 +5718,19 @@
           "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/ssr/_next-internal_server_app_page_actions_0hhsz1j.js"
         },
         {
-          "path": ".open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__0qgo5-4._.js",
+          "path": ".open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__0qdoavm._.js",
           "kind": "require-call",
-          "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__0qgo5-4._.js"
+          "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__0qdoavm._.js"
         },
         {
-          "path": ".open-next/server-functions/default/.next/server/chunks/ssr/_0g5a_zj._.js",
+          "path": ".open-next/server-functions/default/.next/server/chunks/ssr/_0wng5vm._.js",
           "kind": "require-call",
-          "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/ssr/_0g5a_zj._.js"
+          "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/ssr/_0wng5vm._.js"
+        },
+        {
+          "path": ".open-next/server-functions/default/.next/server/chunks/ssr/_1a-0c_d._.js",
+          "kind": "require-call",
+          "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/ssr/_1a-0c_d._.js"
         },
         {
           "path": ".open-next/server-functions/default/.next/server/chunks/ssr/_1j6l_yv._.js",
@@ -5718,14 +5738,9 @@
           "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/ssr/_1j6l_yv._.js"
         },
         {
-          "path": ".open-next/server-functions/default/.next/server/chunks/ssr/_1ql1st3._.js",
+          "path": ".open-next/server-functions/default/.next/server/chunks/ssr/_1s2w3t3._.js",
           "kind": "require-call",
-          "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/ssr/_1ql1st3._.js"
-        },
-        {
-          "path": ".open-next/server-functions/default/.next/server/chunks/ssr/_20o0g2r._.js",
-          "kind": "require-call",
-          "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/ssr/_20o0g2r._.js"
+          "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/ssr/_1s2w3t3._.js"
         },
         {
           "path": ".open-next/server-functions/default/.next/server/chunks/ssr/_next-internal_server_app_portal_(app)_accounting_expenses_page_actions_0rsj8l0.js",
@@ -5828,9 +5843,9 @@
           "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/ssr/components_patients_PatientForm_tsx_1kw3kzp._.js"
         },
         {
-          "path": ".open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__1w6hf_0._.js",
+          "path": ".open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__08enm2c._.js",
           "kind": "require-call",
-          "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__1w6hf_0._.js"
+          "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__08enm2c._.js"
         },
         {
           "path": ".open-next/server-functions/default/.next/server/chunks/ssr/_next-internal_server_app_portal_(app)_patients_page_actions_19xpspq.js",
@@ -5863,9 +5878,9 @@
           "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__202-rf0._.js"
         },
         {
-          "path": ".open-next/server-functions/default/.next/server/chunks/ssr/_01i6jnn._.js",
+          "path": ".open-next/server-functions/default/.next/server/chunks/ssr/_1ezn49-._.js",
           "kind": "require-call",
-          "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/ssr/_01i6jnn._.js"
+          "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/ssr/_1ezn49-._.js"
         },
         {
           "path": ".open-next/server-functions/default/.next/server/chunks/ssr/_next-internal_server_app_portal_(app)_patients_[id]_page_actions_0jqc3ed.js",
@@ -5878,14 +5893,14 @@
           "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/ssr/components_whatsapp_WhatsAppButton_tsx_0eceija._.js"
         },
         {
-          "path": ".open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__0l4skc9._.js",
+          "path": ".open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__1g20_-d._.js",
           "kind": "require-call",
-          "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__0l4skc9._.js"
+          "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__1g20_-d._.js"
         },
         {
-          "path": ".open-next/server-functions/default/.next/server/chunks/ssr/_1wpl67u._.js",
+          "path": ".open-next/server-functions/default/.next/server/chunks/ssr/_1iozm0q._.js",
           "kind": "require-call",
-          "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/ssr/_1wpl67u._.js"
+          "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/ssr/_1iozm0q._.js"
         },
         {
           "path": ".open-next/server-functions/default/.next/server/chunks/ssr/_next-internal_server_app_portal_login_page_actions_10zvbin.js",
@@ -5903,9 +5918,9 @@
           "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/ssr/_next-internal_server_app_portal_page_actions_0a-9aey.js"
         },
         {
-          "path": ".open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__0x1dd67._.js",
+          "path": ".open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__0llitjz._.js",
           "kind": "require-call",
-          "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__0x1dd67._.js"
+          "original": "C:/Users/Hanzala Bin Khalid/Desktop/mehran-dental-erp/.open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__0llitjz._.js"
         },
         {
           "path": ".open-next/server-functions/default/.next/server/chunks/ssr/_next-internal_server_app_services_page_actions_18c-f7f.js",
@@ -7521,7 +7536,7 @@
       "format": "esm"
     },
     ".open-next/server-functions/default/index.mjs": {
-      "bytes": 91851,
+      "bytes": 91852,
       "imports": [
         {
           "path": "node:module",
@@ -8938,7 +8953,7 @@
           "bytesInOutput": 586
         },
         ".open-next/server-functions/default/node_modules/next/dist/server/load-manifest.external.js": {
-          "bytesInOutput": 77058
+          "bytesInOutput": 79073
         },
         ".open-next/cloudflare-templates/shims/throw.js": {
           "bytesInOutput": 215
@@ -9045,14 +9060,17 @@
         ".open-next/server-functions/default/.next/server/chunks/ssr/node_modules_next_dist_client_components_builtin_unauthorized_0l_sp0x.js": {
           "bytesInOutput": 834
         },
-        ".open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__0ghdb2c._.js": {
-          "bytesInOutput": 13016
+        ".open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__1z4oecf._.js": {
+          "bytesInOutput": 12288
+        },
+        ".open-next/server-functions/default/.next/server/chunks/ssr/_1sykv31._.js": {
+          "bytesInOutput": 7727
         },
         ".open-next/server-functions/default/.next/server/chunks/ssr/_next-internal_server_app_about_page_actions_0xvgj07.js": {
           "bytesInOutput": 260
         },
-        ".open-next/server-functions/default/.next/server/chunks/ssr/node_modules_0_o0evb._.js": {
-          "bytesInOutput": 4361
+        ".open-next/server-functions/default/.next/server/chunks/ssr/node_modules_next_0x3i8za._.js": {
+          "bytesInOutput": 53967
         },
         ".open-next/server-functions/default/.next/server/chunks/ssr/node_modules_next_dist_01cjscx._.js": {
           "bytesInOutput": 125004
@@ -9060,8 +9078,8 @@
         ".open-next/server-functions/default/.next/server/chunks/ssr/node_modules_next_dist_client_components_builtin_global-error_0q-w892.js": {
           "bytesInOutput": 505
         },
-        ".open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__034l3hy._.js": {
-          "bytesInOutput": 12829
+        ".open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__1cidwhd._.js": {
+          "bytesInOutput": 12101
         },
         ".open-next/server-functions/default/.next/server/chunks/ssr/_next-internal_server_app_contact_page_actions_0kuoobr.js": {
           "bytesInOutput": 265
@@ -9078,26 +9096,26 @@
         ".open-next/server-functions/default/.next/server/chunks/_next-internal_server_app_favicon_ico_route_actions_0g2jjls.js": {
           "bytesInOutput": 271
         },
-        ".open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__0a3yvpk._.js": {
-          "bytesInOutput": 17631
+        ".open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__1zncstb._.js": {
+          "bytesInOutput": 16903
         },
         ".open-next/server-functions/default/.next/server/chunks/ssr/_next-internal_server_app_page_actions_0hhsz1j.js": {
           "bytesInOutput": 249
         },
-        ".open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__0qgo5-4._.js": {
-          "bytesInOutput": 7303
+        ".open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__0qdoavm._.js": {
+          "bytesInOutput": 8653
         },
-        ".open-next/server-functions/default/.next/server/chunks/ssr/_0g5a_zj._.js": {
-          "bytesInOutput": 284903
+        ".open-next/server-functions/default/.next/server/chunks/ssr/_0wng5vm._.js": {
+          "bytesInOutput": 8136
+        },
+        ".open-next/server-functions/default/.next/server/chunks/ssr/_1a-0c_d._.js": {
+          "bytesInOutput": 231128
         },
         ".open-next/server-functions/default/.next/server/chunks/ssr/_1j6l_yv._.js": {
           "bytesInOutput": 255827
         },
-        ".open-next/server-functions/default/.next/server/chunks/ssr/_1ql1st3._.js": {
-          "bytesInOutput": 5310
-        },
-        ".open-next/server-functions/default/.next/server/chunks/ssr/_20o0g2r._.js": {
-          "bytesInOutput": 3935
+        ".open-next/server-functions/default/.next/server/chunks/ssr/_1s2w3t3._.js": {
+          "bytesInOutput": 987
         },
         ".open-next/server-functions/default/.next/server/chunks/ssr/_next-internal_server_app_portal_(app)_accounting_expenses_page_actions_0rsj8l0.js": {
           "bytesInOutput": 311
@@ -9109,13 +9127,13 @@
           "bytesInOutput": 43093
         },
         ".open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__1cyp008._.js": {
-          "bytesInOutput": 6120
+          "bytesInOutput": 7096
         },
         ".open-next/server-functions/default/.next/server/chunks/ssr/_next-internal_server_app_portal_(app)_accounting_income_page_actions_0a4x-ii.js": {
           "bytesInOutput": 309
         },
         ".open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__1vqc3_e._.js": {
-          "bytesInOutput": 8460
+          "bytesInOutput": 9898
         },
         ".open-next/server-functions/default/.next/server/chunks/ssr/_next-internal_server_app_portal_(app)_accounting_invoices_page_actions_1xbj-4h.js": {
           "bytesInOutput": 312
@@ -9127,7 +9145,7 @@
           "bytesInOutput": 249
         },
         ".open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__1o1d6ga._.js": {
-          "bytesInOutput": 6863
+          "bytesInOutput": 7949
         },
         ".open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__1o57bke._.js": {
           "bytesInOutput": 1295214
@@ -9136,7 +9154,7 @@
           "bytesInOutput": 311
         },
         ".open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__15gd4jt._.js": {
-          "bytesInOutput": 8324
+          "bytesInOutput": 9507
         },
         ".open-next/server-functions/default/.next/server/chunks/ssr/_next-internal_server_app_portal_(app)_appointments_page_actions_0tyz4dt.js": {
           "bytesInOutput": 299
@@ -9145,7 +9163,7 @@
           "bytesInOutput": 6162
         },
         ".open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__21a_gf4._.js": {
-          "bytesInOutput": 5973
+          "bytesInOutput": 6028
         },
         ".open-next/server-functions/default/.next/server/chunks/ssr/_next-internal_server_app_portal_(app)_dashboard_page_actions_1-xabxl.js": {
           "bytesInOutput": 292
@@ -9159,8 +9177,8 @@
         ".open-next/server-functions/default/.next/server/chunks/ssr/components_patients_PatientForm_tsx_1kw3kzp._.js": {
           "bytesInOutput": 2930
         },
-        ".open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__1w6hf_0._.js": {
-          "bytesInOutput": 7284
+        ".open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__08enm2c._.js": {
+          "bytesInOutput": 10598
         },
         ".open-next/server-functions/default/.next/server/chunks/ssr/_next-internal_server_app_portal_(app)_patients_page_actions_19xpspq.js": {
           "bytesInOutput": 291
@@ -9180,8 +9198,8 @@
         ".open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__202-rf0._.js": {
           "bytesInOutput": 4005
         },
-        ".open-next/server-functions/default/.next/server/chunks/ssr/_01i6jnn._.js": {
-          "bytesInOutput": 14614
+        ".open-next/server-functions/default/.next/server/chunks/ssr/_1ezn49-._.js": {
+          "bytesInOutput": 16708
         },
         ".open-next/server-functions/default/.next/server/chunks/ssr/_next-internal_server_app_portal_(app)_patients_[id]_page_actions_0jqc3ed.js": {
           "bytesInOutput": 298
@@ -9189,10 +9207,10 @@
         ".open-next/server-functions/default/.next/server/chunks/ssr/components_whatsapp_WhatsAppButton_tsx_0eceija._.js": {
           "bytesInOutput": 2569
         },
-        ".open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__0l4skc9._.js": {
-          "bytesInOutput": 4750
+        ".open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__1g20_-d._.js": {
+          "bytesInOutput": 7265
         },
-        ".open-next/server-functions/default/.next/server/chunks/ssr/_1wpl67u._.js": {
+        ".open-next/server-functions/default/.next/server/chunks/ssr/_1iozm0q._.js": {
           "bytesInOutput": 6393
         },
         ".open-next/server-functions/default/.next/server/chunks/ssr/_next-internal_server_app_portal_login_page_actions_10zvbin.js": {
@@ -9204,8 +9222,8 @@
         ".open-next/server-functions/default/.next/server/chunks/ssr/_next-internal_server_app_portal_page_actions_0a-9aey.js": {
           "bytesInOutput": 263
         },
-        ".open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__0x1dd67._.js": {
-          "bytesInOutput": 12655
+        ".open-next/server-functions/default/.next/server/chunks/ssr/[root-of-the-server]__0llitjz._.js": {
+          "bytesInOutput": 11927
         },
         ".open-next/server-functions/default/.next/server/chunks/ssr/_next-internal_server_app_services_page_actions_18c-f7f.js": {
           "bytesInOutput": 267
@@ -9220,10 +9238,10 @@
           "bytesInOutput": 275
         },
         ".open-next/server-functions/default/.next/server/chunks/[turbopack]_runtime.js": {
-          "bytesInOutput": 22801
+          "bytesInOutput": 22873
         },
         ".open-next/server-functions/default/.next/server/chunks/ssr/[turbopack]_runtime.js": {
-          "bytesInOutput": 22816
+          "bytesInOutput": 22888
         },
         ".open-next/server-functions/default/.next/server/app/portal/(app)/accounting/expenses/page.js": {
           "bytesInOutput": 1203
@@ -9436,10 +9454,10 @@
           "bytesInOutput": 5074
         },
         ".open-next/server-functions/default/index.mjs": {
-          "bytesInOutput": 64724
+          "bytesInOutput": 64725
         }
       },
-      "bytes": 5310495
+      "bytes": 5327190
     }
   }
 }
