@@ -6,7 +6,7 @@ export function PublicFooter() {
     <footer className="bg-ink text-white mt-24">
       <div className="mx-auto max-w-6xl px-5 md:px-8 py-14 grid grid-cols-1 md:grid-cols-3 gap-10">
         <div>
-          <p className="font-display font-extrabold text-lg">
+          <p className="font-display font-extrabold text-xl tracking-tight">
             Mehran Dental<span className="text-teal">.</span>
           </p>
           <p className="mt-3 text-sm text-white/60 leading-relaxed max-w-xs">

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { AnimatePresence, motion } from "framer-motion";
 
 const links = [
   { href: "/services", label: "Services" },
@@ -34,8 +35,9 @@ export function PublicNav() {
 
         <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-ink/70">
           {links.map((l) => (
-            <Link key={l.href} href={l.href} className="hover:text-ink transition-colors">
-              {l.label}
+            <Link key={l.href} href={l.href} className="relative group py-1">
+              <span className="group-hover:text-ink transition-colors">{l.label}</span>
+              <span className="absolute left-0 -bottom-0.5 h-px w-0 bg-teal transition-[width] duration-200 group-hover:w-full" />
             </Link>
           ))}
         </nav>
@@ -76,32 +78,39 @@ export function PublicNav() {
       </div>
 
       {/* Mobile menu panel */}
-      <div
-        className={`md:hidden overflow-hidden transition-[max-height] duration-200 ease-in-out bg-white border-b border-line ${
-          open ? "max-h-80" : "max-h-0"
-        }`}
-      >
-        <nav className="flex flex-col px-5 py-2">
-          {links.map((l) => (
-            <Link
-              key={l.href}
-              href={l.href}
-              className="py-3 text-base font-medium text-ink/80 border-b border-line last:border-b-0"
-            >
-              {l.label}
-            </Link>
-          ))}
-          <a href="tel:03352411106" className="py-3 text-base font-medium text-ink/80 border-b border-line">
-            Call: 0335 2411106
-          </a>
-          <Link
-            href="/contact"
-            className="my-3 text-center rounded-full bg-teal text-white text-sm font-semibold px-4 py-2.5 hover:bg-teal-dark transition-colors"
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            key="mobile-menu"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+            className="md:hidden overflow-hidden bg-white border-b border-line"
           >
-            Book a visit
-          </Link>
-        </nav>
-      </div>
+            <nav className="flex flex-col px-5 py-2">
+              {links.map((l) => (
+                <Link
+                  key={l.href}
+                  href={l.href}
+                  className="py-3 text-base font-medium text-ink/80 border-b border-line last:border-b-0"
+                >
+                  {l.label}
+                </Link>
+              ))}
+              <a href="tel:03352411106" className="py-3 text-base font-medium text-ink/80 border-b border-line">
+                Call: 0335 2411106
+              </a>
+              <Link
+                href="/contact"
+                className="my-3 text-center rounded-full bg-teal text-white text-sm font-semibold px-4 py-2.5 hover:bg-teal-dark transition-colors"
+              >
+                Book a visit
+              </Link>
+            </nav>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 }
