@@ -3,6 +3,7 @@ import { PublicNav } from "@/components/public/PublicNav";
 import { PublicFooter } from "@/components/public/PublicFooter";
 import { Reveal, Stagger, StaggerItem } from "@/components/public/motion";
 import { CLINIC_ADDRESS, CLINIC_PHONE, whatsappLink } from "@/lib/whatsapp/deepLink";
+import { weeklyHours } from "@/lib/hours";
 
 const bookingLink = whatsappLink(CLINIC_PHONE, "newBookingRequest");
 const inquiryLink = whatsappLink(CLINIC_PHONE, "generalInquiry");
@@ -70,10 +71,16 @@ export default function ContactPage() {
                 <Clock className="w-4 h-4" strokeWidth={2} />
               </div>
               <p className="font-display font-bold text-ink mt-4">Hours</p>
-              <p className="text-sm text-ink/60 mt-2 leading-relaxed">
-                Open in two daily shifts (morning, closing 4:00 PM, and evening from
-                7:15 PM). Exact timing can vary — message us on WhatsApp to confirm
-                before you head over.
+              <div className="mt-3 divide-y divide-line">
+                {weeklyHours.map((d) => (
+                  <div key={d.day} className="flex items-center justify-between py-2 text-sm">
+                    <span className="text-ink/60">{d.day}</span>
+                    <span className="font-medium text-ink text-right">{d.shifts.join(" · ")}</span>
+                  </div>
+                ))}
+              </div>
+              <p className="text-xs text-ink/50 mt-3">
+                Timings can occasionally shift — message us on WhatsApp to confirm before you head over.
               </p>
             </div>
           </StaggerItem>

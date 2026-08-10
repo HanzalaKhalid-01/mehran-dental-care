@@ -3,6 +3,7 @@ import { PublicNav } from "@/components/public/PublicNav";
 import { PublicFooter } from "@/components/public/PublicFooter";
 import { SmileArc } from "@/components/public/SmileArc";
 import { Reveal, Stagger, StaggerItem } from "@/components/public/motion";
+import { galleryPhotos } from "@/lib/gallery";
 
 const pillars = [
   {
@@ -53,6 +54,21 @@ export default function AboutPage() {
             can still find a convenient time, and we handle appointment requests and
             questions directly over WhatsApp so getting in touch is simple.
           </p>
+          <p className="text-ink/80 leading-relaxed mt-4">
+            Patients on Google frequently mention <strong>Dr. Usama</strong> and{" "}
+            <strong>Mr. Shakir</strong> as part of the team here, describing both as
+            attentive and easy to work with.
+          </p>
+        </Reveal>
+
+        <Reveal delay={0.1} className="mt-10 rounded-tl-[3rem] rounded-br-[3rem] rounded-tr-2xl rounded-bl-2xl overflow-hidden bg-mint">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={galleryPhotos[0].src}
+            alt={galleryPhotos[0].alt}
+            loading="lazy"
+            className="w-full h-72 md:h-96 object-cover"
+          />
         </Reveal>
 
         <Stagger className="grid grid-cols-1 sm:grid-cols-3 gap-5 mt-10">

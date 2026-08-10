@@ -17,8 +17,11 @@ import { PublicNav } from "@/components/public/PublicNav";
 import { PublicFooter } from "@/components/public/PublicFooter";
 import { SmileArc, SmileDivider } from "@/components/public/SmileArc";
 import { Reveal, Stagger, StaggerItem, HoverLift } from "@/components/public/motion";
+import { PhotoGrid } from "@/components/public/Gallery";
 import { services } from "@/lib/services";
 import { CLINIC_PHONE, whatsappLink } from "@/lib/whatsapp/deepLink";
+import { todaysHours } from "@/lib/hours";
+import { googleRating, googleReviewCount, googleReviewsUrl, reviewHighlights } from "@/lib/reviews";
 
 const bookingLink = whatsappLink(CLINIC_PHONE, "newBookingRequest");
 
@@ -43,6 +46,7 @@ const steps = [
 ];
 
 export default function HomePage() {
+  const todaysShifts = todaysHours();
   return (
     <>
       <PublicNav />
@@ -93,7 +97,7 @@ export default function HomePage() {
             <StaggerItem>
               <div className="flex items-center gap-2 mt-8 text-sm text-ink/60">
                 <span className="text-marigold font-semibold">★ 4.0</span>
-                <span>· based on patient reviews on Google</span>
+                <span>· {googleReviewCount} reviews on Google</span>
               </div>
             </StaggerItem>
           </Stagger>
@@ -102,22 +106,29 @@ export default function HomePage() {
             <div className="relative rounded-tl-[3rem] rounded-br-[3rem] rounded-tr-2xl rounded-bl-2xl bg-white shadow-xl shadow-ink/5 p-8 md:p-10">
               <SmileArc className="absolute -top-10 left-1/2 -translate-x-1/2 w-56 h-20 text-teal/30" />
               <p className="font-display font-bold text-ink text-lg">Today&apos;s hours</p>
-              <p className="text-ink/60 text-sm mt-1">Open in two shifts — message us to confirm timing</p>
+              <p className="text-ink/60 text-sm mt-1">
+                {todaysShifts.length > 0 ? "Two shifts most days" : "Closed today"}
+              </p>
               <div className="mt-5 space-y-3 text-sm">
-                <div className="flex items-center justify-between border-b border-line pb-3">
-                  <span className="text-ink/60">Morning shift</span>
-                  <span className="font-semibold text-ink">— 4:00 PM</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-ink/60">Evening shift</span>
-                  <span className="font-semibold text-ink">7:15 PM —</span>
-                </div>
+                {todaysShifts.map((shift, i) => (
+                  <div
+                    key={shift}
+                    className={
+                      i < todaysShifts.length - 1
+                        ? "flex items-center justify-between border-b border-line pb-3"
+                        : "flex items-center justify-between"
+                    }
+                  >
+                    <span className="text-ink/60">{i === 0 ? "First shift" : "Second shift"}</span>
+                    <span className="font-semibold text-ink">{shift}</span>
+                  </div>
+                ))}
               </div>
               <Link
                 href="/contact"
                 className="mt-6 inline-block text-sm font-semibold text-teal hover:text-teal-dark"
               >
-                Full hours &amp; directions →
+                Full weekly hours &amp; directions →
               </Link>
             </div>
           </Reveal>
@@ -156,6 +167,24 @@ export default function HomePage() {
             );
           })}
         </Stagger>
+      </section>
+
+      {/* Gallery */}
+      <section className="mx-auto max-w-6xl px-5 md:px-8 pb-20 md:pb-28">
+        <Reveal className="flex items-end justify-between flex-wrap gap-4 mb-10">
+          <div>
+            <p className="text-xs font-semibold tracking-wide uppercase text-teal-dark">Inside the clinic</p>
+            <h2 className="font-display font-extrabold text-3xl md:text-4xl text-ink mt-2">
+              A look around
+            </h2>
+          </div>
+          <Link href="/gallery" className="text-sm font-semibold text-teal hover:text-teal-dark">
+            View full gallery →
+          </Link>
+        </Reveal>
+        <Reveal delay={0.08}>
+          <PhotoGrid limit={5} />
+        </Reveal>
       </section>
 
       {/* How booking works */}
@@ -214,6 +243,40 @@ export default function HomePage() {
               Reach us on WhatsApp for questions, appointment requests, or directions.
             </p>
           </Reveal>
+        </div>
+      </section>
+
+      {/* Reviews */}
+      <section className="bg-sand py-20 md:py-28">
+        <div className="mx-auto max-w-6xl px-5 md:px-8">
+          <Reveal className="flex items-end justify-between flex-wrap gap-4 mb-10">
+            <div>
+              <p className="text-xs font-semibold tracking-wide uppercase text-teal-dark">Patient reviews</p>
+              <h2 className="font-display font-extrabold text-3xl md:text-4xl text-ink mt-2 leading-tight">
+                What patients say on Google
+              </h2>
+              <div className="flex items-center gap-2 mt-3 text-sm text-ink/60">
+                <span className="text-marigold font-semibold">★ {googleRating.toFixed(1)}</span>
+                <span>· {googleReviewCount} reviews</span>
+              </div>
+            </div>
+            <a
+              href={googleReviewsUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm font-semibold text-teal hover:text-teal-dark"
+            >
+              View all on Google →
+            </a>
+          </Reveal>
+
+          <Stagger className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {reviewHighlights.map((r) => (
+              <StaggerItem key={r.text} className="rounded-2xl bg-white border border-line p-6">
+                <p className="text-sm text-ink/70 leading-relaxed">{r.text}</p>
+              </StaggerItem>
+            ))}
+          </Stagger>
         </div>
       </section>
 

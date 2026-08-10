@@ -25,6 +25,7 @@ export function PublicFooter() {
           <p className="font-semibold text-white/90 mb-3">Explore</p>
           <ul className="space-y-2 text-white/60">
             <li><Link href="/services" className="hover:text-white">Services</Link></li>
+            <li><Link href="/gallery" className="hover:text-white">Gallery</Link></li>
             <li><Link href="/about" className="hover:text-white">About</Link></li>
             <li><Link href="/contact" className="hover:text-white">Contact</Link></li>
             <li><Link href="/portal/login" className="hover:text-white">Staff login</Link></li>
