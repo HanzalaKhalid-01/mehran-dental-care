@@ -33,7 +33,7 @@ export default async function PatientDetailPage({ params }: { params: Promise<{ 
       <div className="flex items-start justify-between">
         <div>
           <h1 className="text-xl font-semibold">{patient.full_name}</h1>
-          <p className="text-sm text-slate-500 mt-1">{patient.phone}</p>
+          <p className="text-sm text-muted-foreground mt-1">{patient.phone}</p>
         </div>
         <div className="flex gap-2">
           <WhatsAppButton
@@ -44,7 +44,7 @@ export default async function PatientDetailPage({ params }: { params: Promise<{ 
           />
           <Link
             href={`/portal/patients/${patient.id}/edit`}
-            className="text-sm rounded-md border border-slate-300 px-3 py-1.5 font-medium hover:bg-slate-50"
+            className="text-sm rounded-md border border-border px-3 py-1.5 font-medium hover:bg-background"
           >
             Edit Details
           </Link>
@@ -52,59 +52,59 @@ export default async function PatientDetailPage({ params }: { params: Promise<{ 
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-white rounded-xl border border-slate-200 p-4">
-          <p className="text-xs text-slate-500">Date of birth</p>
+        <div className="bg-card rounded-xl border border-border p-4">
+          <p className="text-xs text-muted-foreground">Date of birth</p>
           <p className="font-medium">{patient.dob ?? "—"}</p>
         </div>
-        <div className="bg-white rounded-xl border border-slate-200 p-4">
-          <p className="text-xs text-slate-500">Gender</p>
+        <div className="bg-card rounded-xl border border-border p-4">
+          <p className="text-xs text-muted-foreground">Gender</p>
           <p className="font-medium capitalize">{patient.gender ?? "—"}</p>
         </div>
-        <div className="bg-white rounded-xl border border-slate-200 p-4">
-          <p className="text-xs text-slate-500">Total billed</p>
+        <div className="bg-card rounded-xl border border-border p-4">
+          <p className="text-xs text-muted-foreground">Total billed</p>
           <p className="font-medium">Rs. {totalBilled.toLocaleString()}</p>
         </div>
-        <div className="bg-white rounded-xl border border-slate-200 p-4">
-          <p className="text-xs text-slate-500">Outstanding</p>
-          <p className="font-medium text-red-600">Rs. {totalOutstanding.toLocaleString()}</p>
+        <div className="bg-card rounded-xl border border-border p-4">
+          <p className="text-xs text-muted-foreground">Outstanding</p>
+          <p className="font-medium text-destructive">Rs. {totalOutstanding.toLocaleString()}</p>
         </div>
       </div>
 
       {patient.address && (
-        <div className="bg-white rounded-xl border border-slate-200 p-4">
-          <p className="text-xs text-slate-500 mb-1">Address</p>
+        <div className="bg-card rounded-xl border border-border p-4">
+          <p className="text-xs text-muted-foreground mb-1">Address</p>
           <p className="text-sm">{patient.address}</p>
         </div>
       )}
 
-      <div className="bg-white rounded-xl border border-slate-200 p-5">
+      <div className="bg-card rounded-xl border border-border p-5">
         <h2 className="font-medium mb-3">Visit History (Appointments)</h2>
         {(!appointments || appointments.length === 0) ? (
-          <p className="text-sm text-slate-500">No appointments recorded yet.</p>
+          <p className="text-sm text-muted-foreground">No appointments recorded yet.</p>
         ) : (
-          <ul className="divide-y divide-slate-100">
+          <ul className="divide-y divide-border">
             {appointments.map((a) => (
               <li key={a.id} className="py-2.5 flex items-center justify-between text-sm">
                 <span>{new Date(a.scheduled_at).toLocaleString()}</span>
-                <span className="capitalize text-slate-500">{a.status.replace("_", " ")}</span>
+                <span className="capitalize text-muted-foreground">{a.status.replace("_", " ")}</span>
               </li>
             ))}
           </ul>
         )}
       </div>
 
-      <div className="bg-white rounded-xl border border-slate-200 p-5">
+      <div className="bg-card rounded-xl border border-border p-5">
         <h2 className="font-medium mb-3">Invoices</h2>
         {(!invoices || invoices.length === 0) ? (
-          <p className="text-sm text-slate-500">No invoices yet.</p>
+          <p className="text-sm text-muted-foreground">No invoices yet.</p>
         ) : (
-          <ul className="divide-y divide-slate-100">
+          <ul className="divide-y divide-border">
             {invoices.map((inv) => (
               <li key={inv.id} className="py-2.5 flex items-center justify-between text-sm">
                 <span>{inv.invoice_no} — {new Date(inv.issued_at).toLocaleDateString()}</span>
                 <span className="flex items-center gap-3">
                   <span>Rs. {Number(inv.total).toLocaleString()}</span>
-                  <span className="capitalize text-slate-500">{inv.status}</span>
+                  <span className="capitalize text-muted-foreground">{inv.status}</span>
                 </span>
               </li>
             ))}

@@ -45,12 +45,12 @@ export default function ServicesPage() {
             return (
               <StaggerItem key={s.name}>
                 <HoverLift className="h-full">
-                  <div className="h-full rounded-2xl border border-line p-7 hover:border-teal/40 hover:shadow-lg hover:shadow-ink/5 transition-[border-color,box-shadow]">
+                  <div className="h-full rounded-2xl border border-border p-7 hover:border-teal/40 hover:shadow-lg hover:shadow-ink/5 transition-[border-color,box-shadow]">
                     <div className="w-10 h-10 rounded-full bg-mint text-teal-dark flex items-center justify-center">
                       <Icon className="w-5 h-5" strokeWidth={2} />
                     </div>
                     <p className="font-display font-bold text-lg text-ink mt-4">{s.name}</p>
-                    <p className="text-sm text-ink/60 mt-2 leading-relaxed">{s.description}</p>
+                    <p className="text-sm text-muted-foreground mt-2 leading-relaxed">{s.description}</p>
                     <a
                       href={bookingLink}
                       target="_blank"

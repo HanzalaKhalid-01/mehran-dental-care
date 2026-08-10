@@ -3,9 +3,19 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
+import { Select } from "@/components/ui/Select";
+import { OfflineNotice } from "@/components/offline/OfflineNotice";
+import { useOnlineStatus } from "@/lib/offline/useOnlineStatus";
 
-export function AppointmentForm({ patients }: { patients: { id: string; full_name: string }[] }) {
+export function AppointmentForm({
+  patients,
+}: {
+  patients: { id: string; full_name: string }[];
+}) {
   const router = useRouter();
+  const { isOffline } = useOnlineStatus();
   const [patientId, setPatientId] = useState("");
   const [dateTime, setDateTime] = useState("");
   const [notes, setNotes] = useState("");
@@ -14,6 +24,7 @@ export function AppointmentForm({ patients }: { patients: { id: string; full_nam
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (isOffline) return;
     setSaving(true);
     setError(null);
 
@@ -39,57 +50,35 @@ export function AppointmentForm({ patients }: { patients: { id: string; full_nam
   }
 
   return (
-    <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-4 gap-3 items-end">
-      <div>
-        <label className="block text-sm font-medium mb-1">Patient *</label>
-        <select
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <Select
+          label="Patient"
           required
           value={patientId}
           onChange={(e) => setPatientId(e.target.value)}
-          className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
-        >
-          <option value="">Select patient</option>
-          {patients.map((p) => (
-            <option key={p.id} value={p.id}>
-              {p.full_name}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium mb-1">Date &amp; time *</label>
-        <input
+          placeholder="Select patient"
+          options={patients.map((p) => ({ value: p.id, label: p.full_name }))}
+        />
+        <Input
+          label="Date & time"
           required
           type="datetime-local"
           value={dateTime}
           onChange={(e) => setDateTime(e.target.value)}
-          className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
         />
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium mb-1">Notes</label>
-        <input
+        <Input
+          label="Notes"
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
-          className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
           placeholder="Optional"
         />
       </div>
-
-      <button
-        type="submit"
-        disabled={saving || patients.length === 0}
-        className="rounded-md bg-[#0EA5A4] text-white px-4 py-2 text-sm font-medium disabled:opacity-50 h-fit"
-      >
-        {saving ? "Booking..." : "Book"}
-      </button>
-
-      {error && <p className="text-sm text-red-600 col-span-full">{error}</p>}
-      {patients.length === 0 && (
-        <p className="text-sm text-slate-500 col-span-full">Add a patient first to book an appointment.</p>
-      )}
+      <OfflineNotice />
+      {error && <p className="text-sm text-destructive">{error}</p>}
+      <Button type="submit" loading={saving} disabled={isOffline}>
+        {saving ? "Booking..." : "Book appointment"}
+      </Button>
     </form>
   );
 }

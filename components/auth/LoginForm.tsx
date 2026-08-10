@@ -3,9 +3,14 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
+import { OfflineNotice } from "@/components/offline/OfflineNotice";
+import { useOnlineStatus } from "@/lib/offline/useOnlineStatus";
 
 export function LoginForm() {
   const router = useRouter();
+  const { isOffline } = useOnlineStatus();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -13,11 +18,15 @@ export function LoginForm() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (isOffline) return;
     setLoading(true);
     setError(null);
 
     const supabase = createClient();
-    const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
+    const { error: signInError } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
 
     setLoading(false);
 
@@ -31,41 +40,34 @@ export function LoginForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 w-full max-w-sm">
-      <div>
-        <label className="block text-sm font-medium mb-1">Email</label>
-        <input
-          required
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
-          placeholder="you@mehrandental.pk"
-          autoComplete="username"
-        />
-      </div>
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <Input
+        label="Email"
+        required
+        type="email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        placeholder="you@mehrandental.pk"
+        autoComplete="username"
+      />
 
-      <div>
-        <label className="block text-sm font-medium mb-1">Password</label>
-        <input
-          required
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
-          autoComplete="current-password"
-        />
-      </div>
+      <Input
+        label="Password"
+        required
+        type="password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        autoComplete="current-password"
+      />
 
-      {error && <p className="text-sm text-red-600">{error}</p>}
+      <OfflineNotice />
+      {error && (
+        <p className="text-sm text-destructive">{error}</p>
+      )}
 
-      <button
-        type="submit"
-        disabled={loading}
-        className="w-full rounded-md bg-[#0EA5A4] text-white px-4 py-2 text-sm font-medium disabled:opacity-50"
-      >
+      <Button type="submit" loading={loading} className="w-full" size="lg" disabled={isOffline}>
         {loading ? "Signing in..." : "Sign in"}
-      </button>
+      </Button>
     </form>
   );
 }

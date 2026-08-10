@@ -3,7 +3,7 @@ import { CLINIC_ADDRESS, CLINIC_PHONE } from "@/lib/whatsapp/deepLink";
 
 export function PublicFooter() {
   return (
-    <footer className="bg-ink text-white mt-24">
+    <footer className="bg-navy text-white mt-24 border-t border-white/10">
       <div className="mx-auto max-w-6xl px-5 md:px-8 py-14 grid grid-cols-1 md:grid-cols-3 gap-10">
         <div>
           <p className="font-display font-extrabold text-xl tracking-tight">

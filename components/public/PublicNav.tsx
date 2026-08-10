@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
+import { ThemeToggle } from "@/components/theme/ThemeToggle";
 
 const links = [
   { href: "/services", label: "Services" },
@@ -28,7 +29,7 @@ export function PublicNav() {
   }, [open]);
 
   return (
-    <header className="sticky top-0 z-40 bg-white/90 backdrop-blur border-b border-line">
+    <header className="sticky top-0 z-40 bg-card/90 backdrop-blur border-b border-border">
       <div className="mx-auto max-w-6xl px-5 md:px-8 h-16 flex items-center justify-between">
         <Link href="/" className="font-display font-extrabold text-lg text-ink tracking-tight">
           Mehran Dental<span className="text-teal">.</span>
@@ -43,7 +44,8 @@ export function PublicNav() {
           ))}
         </nav>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <ThemeToggle variant="public" />
           <a
             href="tel:03352411106"
             className="hidden sm:inline text-sm font-semibold text-ink/70 hover:text-ink"
@@ -87,24 +89,27 @@ export function PublicNav() {
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-            className="md:hidden overflow-hidden bg-white border-b border-line"
+            className="md:hidden overflow-hidden bg-card border-b border-border"
           >
             <nav className="flex flex-col px-5 py-2">
               {links.map((l) => (
                 <Link
                   key={l.href}
                   href={l.href}
-                  className="py-3 text-base font-medium text-ink/80 border-b border-line last:border-b-0"
+                  className="py-3 text-base font-medium text-ink/80 border-b border-border last:border-b-0"
                 >
                   {l.label}
                 </Link>
               ))}
-              <a href="tel:03352411106" className="py-3 text-base font-medium text-ink/80 border-b border-line">
-                Call: 0335 2411106
+              <a
+                href="tel:03352411106"
+                className="py-3 text-base font-medium text-ink/80 border-b border-border"
+              >
+                Call 0335 2411106
               </a>
               <Link
                 href="/contact"
-                className="my-3 text-center rounded-full bg-teal text-white text-sm font-semibold px-4 py-2.5 hover:bg-teal-dark transition-colors"
+                className="my-3 rounded-full bg-teal text-white text-center text-sm font-semibold px-4 py-2.5"
               >
                 Book a visit
               </Link>

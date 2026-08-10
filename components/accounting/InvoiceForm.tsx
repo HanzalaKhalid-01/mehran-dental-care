@@ -3,9 +3,19 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
+import { Select } from "@/components/ui/Select";
+import { OfflineNotice } from "@/components/offline/OfflineNotice";
+import { useOnlineStatus } from "@/lib/offline/useOnlineStatus";
 
-export function InvoiceForm({ patients }: { patients: { id: string; full_name: string }[] }) {
+export function InvoiceForm({
+  patients,
+}: {
+  patients: { id: string; full_name: string }[];
+}) {
   const router = useRouter();
+  const { isOffline } = useOnlineStatus();
   const [patientId, setPatientId] = useState("");
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState("");
@@ -14,6 +24,7 @@ export function InvoiceForm({ patients }: { patients: { id: string; full_name: s
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (isOffline) return;
     setSaving(true);
     setError(null);
 
@@ -57,52 +68,37 @@ export function InvoiceForm({ patients }: { patients: { id: string; full_name: s
   }
 
   return (
-    <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-4 gap-3 items-end">
-      <div>
-        <label className="block text-sm font-medium mb-1">Patient *</label>
-        <select
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <Select
+          label="Patient"
           required
           value={patientId}
           onChange={(e) => setPatientId(e.target.value)}
-          className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
-        >
-          <option value="">Select patient</option>
-          {patients.map((p) => (
-            <option key={p.id} value={p.id}>
-              {p.full_name}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div>
-        <label className="block text-sm font-medium mb-1">Treatment / description</label>
-        <input
+          placeholder="Select patient"
+          options={patients.map((p) => ({ value: p.id, label: p.full_name }))}
+        />
+        <Input
+          label="Treatment / description"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
           placeholder="e.g. Scaling"
         />
-      </div>
-      <div>
-        <label className="block text-sm font-medium mb-1">Amount (Rs.) *</label>
-        <input
+        <Input
+          label="Amount (Rs.)"
           required
           type="number"
           min="0"
           step="0.01"
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
-          className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
         />
       </div>
-      <button
-        type="submit"
-        disabled={saving || patients.length === 0}
-        className="rounded-md bg-[#0EA5A4] text-white px-4 py-2 text-sm font-medium disabled:opacity-50 h-fit"
-      >
+      <OfflineNotice />
+      {error && <p className="text-sm text-destructive">{error}</p>}
+      <Button type="submit" loading={saving} disabled={patients.length === 0 || isOffline}>
         {saving ? "Creating..." : "Create Invoice"}
-      </button>
-      {error && <p className="text-sm text-red-600 col-span-full">{error}</p>}
+      </Button>
     </form>
   );
 }

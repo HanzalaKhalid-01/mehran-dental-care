@@ -56,7 +56,7 @@ export default function HomePage() {
         <div className="mx-auto max-w-6xl px-5 md:px-8 pt-16 pb-20 md:pt-24 md:pb-28 grid grid-cols-1 md:grid-cols-2 gap-14 items-center">
           <Stagger>
             <StaggerItem>
-              <p className="inline-block text-xs font-semibold tracking-wide uppercase text-teal-dark bg-white/70 rounded-full px-3 py-1">
+              <p className="inline-block text-xs font-semibold tracking-wide uppercase text-teal-dark bg-card/80 rounded-full px-3 py-1 border border-border/50">
                 Latifabad, Hyderabad
               </p>
             </StaggerItem>
@@ -88,7 +88,7 @@ export default function HomePage() {
                 </a>
                 <a
                   href="tel:03352411106"
-                  className="rounded-full border border-ink/15 text-ink font-semibold px-6 py-3 text-sm hover:bg-white transition-colors"
+                  className="rounded-full border border-border text-ink font-semibold px-6 py-3 text-sm hover:bg-card transition-colors"
                 >
                   Call {CLINIC_PHONE}
                 </a>
@@ -103,10 +103,10 @@ export default function HomePage() {
           </Stagger>
 
           <Reveal delay={0.15} className="relative">
-            <div className="relative rounded-tl-[3rem] rounded-br-[3rem] rounded-tr-2xl rounded-bl-2xl bg-white shadow-xl shadow-ink/5 p-8 md:p-10">
+            <div className="relative rounded-tl-[3rem] rounded-br-[3rem] rounded-tr-2xl rounded-bl-2xl bg-card text-card-foreground shadow-xl shadow-black/10 dark:shadow-black/50 p-8 md:p-10 border border-border ring-1 ring-black/5 dark:ring-white/10">
               <SmileArc className="absolute -top-10 left-1/2 -translate-x-1/2 w-56 h-20 text-teal/30" />
-              <p className="font-display font-bold text-ink text-lg">Today&apos;s hours</p>
-              <p className="text-ink/60 text-sm mt-1">
+              <p className="font-display font-bold text-card-foreground text-lg">Today&apos;s hours</p>
+              <p className="text-muted-foreground text-sm mt-1">
                 {todaysShifts.length > 0 ? "Two shifts most days" : "Closed today"}
               </p>
               <div className="mt-5 space-y-3 text-sm">
@@ -115,12 +115,12 @@ export default function HomePage() {
                     key={shift}
                     className={
                       i < todaysShifts.length - 1
-                        ? "flex items-center justify-between border-b border-line pb-3"
+                        ? "flex items-center justify-between border-b border-border pb-3"
                         : "flex items-center justify-between"
                     }
                   >
-                    <span className="text-ink/60">{i === 0 ? "First shift" : "Second shift"}</span>
-                    <span className="font-semibold text-ink">{shift}</span>
+                    <span className="text-muted-foreground">{i === 0 ? "First shift" : "Second shift"}</span>
+                    <span className="font-semibold text-card-foreground">{shift}</span>
                   </div>
                 ))}
               </div>
@@ -134,7 +134,7 @@ export default function HomePage() {
           </Reveal>
         </div>
 
-        <SmileDivider className="text-white relative -mb-px" />
+        <SmileDivider className="text-background relative -mb-px" />
       </section>
 
       {/* Services */}
@@ -155,12 +155,12 @@ export default function HomePage() {
             return (
               <StaggerItem key={s.name}>
                 <HoverLift className="h-full">
-                  <div className="h-full rounded-2xl border border-line p-6 hover:border-teal/40 hover:shadow-lg hover:shadow-ink/5 transition-[border-color,box-shadow]">
+                  <div className="h-full rounded-2xl border border-border bg-card p-6 shadow-sm hover:border-primary/40 hover:shadow-lg hover:shadow-black/5 dark:hover:shadow-black/40 transition-[border-color,box-shadow]">
                     <div className="w-10 h-10 rounded-full bg-mint text-teal-dark flex items-center justify-center">
                       <Icon className="w-5 h-5" strokeWidth={2} />
                     </div>
-                    <p className="font-display font-bold text-ink mt-4">{s.name}</p>
-                    <p className="text-sm text-ink/60 mt-2 leading-relaxed">{s.description}</p>
+                    <p className="font-display font-bold text-card-foreground mt-4">{s.name}</p>
+                    <p className="text-sm text-muted-foreground mt-2 leading-relaxed">{s.description}</p>
                   </div>
                 </HoverLift>
               </StaggerItem>
@@ -204,12 +204,12 @@ export default function HomePage() {
                   <span className="font-display font-extrabold text-2xl text-teal/30">
                     0{i + 1}
                   </span>
-                  <div className="w-9 h-9 rounded-full bg-white border border-line flex items-center justify-center text-teal-dark shrink-0">
+                  <div className="w-9 h-9 rounded-full bg-card border border-border flex items-center justify-center text-teal-dark shrink-0">
                     <step.icon className="w-4 h-4" strokeWidth={2} />
                   </div>
                 </div>
-                <p className="font-display font-bold text-ink mt-4">{step.title}</p>
-                <p className="text-sm text-ink/60 mt-2 leading-relaxed">{step.body}</p>
+                <p className="font-display font-bold text-card-foreground mt-4">{step.title}</p>
+                <p className="text-sm text-muted-foreground mt-2 leading-relaxed">{step.body}</p>
               </StaggerItem>
             ))}
           </Stagger>
@@ -226,7 +226,7 @@ export default function HomePage() {
             </h2>
           </Reveal>
           <Reveal delay={0.08} className="rounded-2xl bg-mint p-6">
-            <div className="w-9 h-9 rounded-full bg-white text-teal-dark flex items-center justify-center">
+            <div className="w-9 h-9 rounded-full bg-card border border-border text-teal-dark flex items-center justify-center">
               <Clock className="w-4 h-4" strokeWidth={2} />
             </div>
             <p className="font-display font-bold text-ink mt-4">Two shifts, daily</p>
@@ -235,7 +235,7 @@ export default function HomePage() {
             </p>
           </Reveal>
           <Reveal delay={0.16} className="rounded-2xl bg-mint p-6">
-            <div className="w-9 h-9 rounded-full bg-white text-teal-dark flex items-center justify-center">
+            <div className="w-9 h-9 rounded-full bg-card border border-border text-teal-dark flex items-center justify-center">
               <MessageCircle className="w-4 h-4" strokeWidth={2} />
             </div>
             <p className="font-display font-bold text-ink mt-4">Message before you visit</p>
@@ -272,8 +272,8 @@ export default function HomePage() {
 
           <Stagger className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {reviewHighlights.map((r) => (
-              <StaggerItem key={r.text} className="rounded-2xl bg-white border border-line p-6">
-                <p className="text-sm text-ink/70 leading-relaxed">{r.text}</p>
+              <StaggerItem key={r.text} className="rounded-2xl bg-card border border-border p-6">
+                <p className="text-sm text-muted-foreground leading-relaxed">{r.text}</p>
               </StaggerItem>
             ))}
           </Stagger>
@@ -282,7 +282,7 @@ export default function HomePage() {
 
       {/* CTA banner */}
       <section className="mx-auto max-w-6xl px-5 md:px-8 pb-20 md:pb-28">
-        <Reveal className="relative overflow-hidden rounded-tl-[3rem] rounded-br-[3rem] rounded-tr-2xl rounded-bl-2xl bg-ink text-white px-8 py-14 md:px-16 md:py-20 text-center">
+        <Reveal className="relative overflow-hidden rounded-tl-[3rem] rounded-br-[3rem] rounded-tr-2xl rounded-bl-2xl bg-navy text-white px-8 py-14 md:px-16 md:py-20 text-center">
           <SmileArc className="absolute -bottom-10 left-1/2 -translate-x-1/2 w-72 h-24 text-teal/30" />
           <h2 className="font-display font-extrabold text-3xl md:text-5xl">Ready for your next visit?</h2>
           <p className="text-white/60 mt-3 max-w-md mx-auto">

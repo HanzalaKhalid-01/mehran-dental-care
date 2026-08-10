@@ -1,9 +1,13 @@
 import { PatientForm } from "@/components/patients/PatientForm";
+import { PageHeader } from "@/components/ui/PageHeader";
 
 export default function NewPatientPage() {
   return (
-    <div className="space-y-4">
-      <h1 className="text-xl font-semibold">Add Patient</h1>
+    <div>
+      <PageHeader
+        title="Add Patient"
+        description="Register a new patient in the clinic system"
+      />
       <PatientForm />
     </div>
   );

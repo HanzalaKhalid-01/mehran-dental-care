@@ -2,6 +2,11 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { WhatsAppButton } from "@/components/whatsapp/WhatsAppButton";
 import { DeleteButton } from "@/components/ui/DeleteButton";
+import { PageHeader } from "@/components/ui/PageHeader";
+import { Card } from "@/components/ui/Card";
+import { Button } from "@/components/ui/Button";
+import { EmptyState } from "@/components/ui/EmptyState";
+import { Users, Plus } from "lucide-react";
 import type { Patient } from "@/types/database";
 
 async function getPatients(): Promise<Patient[]> {
@@ -22,106 +27,129 @@ export default async function PatientsPage() {
   }
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h1 className="text-xl font-semibold">Patients</h1>
-        <Link
-          href="/portal/patients/new"
-          className="rounded-md bg-[#0EA5A4] text-white px-4 py-2 text-sm font-medium"
-        >
-          + Add Patient
-        </Link>
-      </div>
+    <div>
+      <PageHeader
+        title="Patients"
+        description={`${patients.length} patient${patients.length === 1 ? "" : "s"} registered`}
+        actions={
+          <Link href="/portal/patients/new">
+            <Button size="md">
+              <Plus className="h-4 w-4" />
+              Add Patient
+            </Button>
+          </Link>
+        }
+      />
 
       {patients.length === 0 ? (
-        <div className="bg-white rounded-xl border border-slate-200 p-8 text-center text-slate-500">
-          No patients yet. Add your first patient, or connect Supabase if you haven't yet
-          (see README).
-        </div>
+        <Card padding="none">
+          <EmptyState
+            icon={<Users className="h-5 w-5" />}
+            title="No patients yet"
+            description="Add your first patient or use Walk-in when someone arrives at the clinic."
+            action={
+              <Link href="/portal/patients/new">
+                <Button size="md">
+                  <Plus className="h-4 w-4" />
+                  Add Patient
+                </Button>
+              </Link>
+            }
+          />
+        </Card>
       ) : (
         <>
-          {/* Mobile: stacked cards */}
+          {/* Mobile cards */}
           <div className="sm:hidden space-y-3">
             {patients.map((p) => (
-              <div key={p.id} className="bg-white rounded-xl border border-slate-200 p-4">
+              <Card key={p.id} padding="sm">
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
                     <Link
                       href={`/portal/patients/${p.id}`}
-                      className="font-medium text-[#0EA5A4] hover:underline block truncate"
+                      className="font-medium text-foreground hover:text-primary transition-colors"
                     >
                       {p.full_name}
                     </Link>
-                    <p className="text-sm text-slate-500 mt-0.5">{p.phone}</p>
+                    <p className="text-sm text-muted-foreground mt-0.5">{p.phone}</p>
+                    {p.gender && (
+                      <p className="text-xs text-muted-foreground mt-0.5 capitalize">{p.gender}</p>
+                    )}
                   </div>
-                  <span className="text-xs text-slate-400 whitespace-nowrap shrink-0">
-                    {new Date(p.created_at).toLocaleDateString()}
-                  </span>
                 </div>
-                <div className="flex items-center gap-2 flex-wrap mt-3 pt-3 border-t border-slate-100">
-                  <WhatsAppButton
-                    phone={p.phone}
-                    template="appointmentReminder"
-                    args={[p.full_name, "your next visit"]}
-                    label="Remind"
-                  />
-                  <Link
-                    href={`/portal/patients/${p.id}/edit`}
-                    className="text-xs rounded-md border border-slate-300 px-2.5 py-1.5 font-medium hover:bg-slate-50"
-                  >
-                    Edit
+                <div className="flex items-center gap-2 flex-wrap mt-3 pt-3 border-t border-border">
+                  <Link href={`/portal/patients/${p.id}`}>
+                    <Button variant="outline" size="sm">View</Button>
                   </Link>
+                  <Link href={`/portal/patients/${p.id}/edit`}>
+                    <Button variant="ghost" size="sm">Edit</Button>
+                  </Link>
+                  {p.phone && (
+                    <WhatsAppButton
+                      phone={p.phone}
+                      template="generalInquiry"
+                      args={[]}
+                      label="WhatsApp"
+                    />
+                  )}
                   <DeleteButton table="patients" id={p.id} confirmLabel={p.full_name} />
                 </div>
-              </div>
+              </Card>
             ))}
           </div>
 
-          {/* Tablet/desktop: table */}
-          <div className="hidden sm:block bg-white rounded-xl border border-slate-200 overflow-x-auto">
-            <table className="w-full text-sm min-w-[560px]">
-              <thead className="bg-slate-50 text-left text-slate-500">
-                <tr>
-                  <th className="px-4 py-3">Name</th>
-                  <th className="px-4 py-3">Phone</th>
-                  <th className="px-4 py-3">Added</th>
-                  <th className="px-4 py-3">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {patients.map((p) => (
-                  <tr key={p.id} className="border-t border-slate-100">
-                    <td className="px-4 py-3 font-medium">
-                      <Link href={`/portal/patients/${p.id}`} className="hover:underline text-[#0EA5A4]">
-                        {p.full_name}
-                      </Link>
-                    </td>
-                    <td className="px-4 py-3">{p.phone}</td>
-                    <td className="px-4 py-3 text-slate-500">
-                      {new Date(p.created_at).toLocaleDateString()}
-                    </td>
-                    <td className="px-4 py-3">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <WhatsAppButton
-                          phone={p.phone}
-                          template="appointmentReminder"
-                          args={[p.full_name, "your next visit"]}
-                          label="Remind"
-                        />
-                        <Link
-                          href={`/portal/patients/${p.id}/edit`}
-                          className="text-xs rounded-md border border-slate-300 px-2 py-1 font-medium hover:bg-slate-50"
-                        >
-                          Edit
-                        </Link>
-                        <DeleteButton table="patients" id={p.id} confirmLabel={p.full_name} />
-                      </div>
-                    </td>
+          {/* Desktop table */}
+          <Card padding="none" className="hidden sm:block overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-border bg-muted/40">
+                    <th className="text-left font-medium text-muted-foreground px-5 py-3">Name</th>
+                    <th className="text-left font-medium text-muted-foreground px-5 py-3">Phone</th>
+                    <th className="text-left font-medium text-muted-foreground px-5 py-3">Gender</th>
+                    <th className="text-right font-medium text-muted-foreground px-5 py-3">Actions</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody className="divide-y divide-border">
+                  {patients.map((p) => (
+                    <tr key={p.id} className="hover:bg-muted/30 transition-colors">
+                      <td className="px-5 py-3.5">
+                        <Link
+                          href={`/portal/patients/${p.id}`}
+                          className="font-medium text-foreground hover:text-primary transition-colors"
+                        >
+                          {p.full_name}
+                        </Link>
+                      </td>
+                      <td className="px-5 py-3.5 text-muted-foreground">{p.phone}</td>
+                      <td className="px-5 py-3.5 text-muted-foreground capitalize">
+                        {p.gender || "—"}
+                      </td>
+                      <td className="px-5 py-3.5">
+                        <div className="flex items-center justify-end gap-2 flex-wrap">
+                          <Link href={`/portal/patients/${p.id}`}>
+                            <Button variant="outline" size="sm">View</Button>
+                          </Link>
+                          <Link href={`/portal/patients/${p.id}/edit`}>
+                            <Button variant="ghost" size="sm">Edit</Button>
+                          </Link>
+                          {p.phone && (
+                            <WhatsAppButton
+                              phone={p.phone}
+                              template="generalInquiry"
+                              args={[p.full_name]}
+                              label="WhatsApp"
+                            />
+                          )}
+                          <DeleteButton table="patients" id={p.id} confirmLabel={p.full_name} />
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </Card>
         </>
       )}
     </div>

@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { PageHeader } from "@/components/ui/PageHeader";
 import { ExportButtons } from "@/components/accounting/ExportButtons";
 
 function monthKey(dateStr: string) {
@@ -44,6 +45,10 @@ export default async function ReportsPage() {
 
   return (
     <div className="space-y-6">
+      <PageHeader
+        title="Reports"
+        description="Profit & loss and exportable summaries"
+      />
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h1 className="text-xl font-semibold">Reports — Profit &amp; Loss</h1>
         <ExportButtons rows={rows} />
@@ -52,24 +57,24 @@ export default async function ReportsPage() {
       {/* Mobile: stacked cards */}
       <div className="sm:hidden space-y-3">
         {rows.length === 0 && (
-          <div className="bg-white rounded-xl border border-slate-200 p-8 text-center text-slate-500">
+          <div className="bg-card rounded-xl border border-border p-8 text-center text-muted-foreground">
             No data yet — record some income and expenses first.
           </div>
         )}
         {rows.map((r) => (
-          <div key={r.label} className="bg-white rounded-xl border border-slate-200 p-4">
+          <div key={r.label} className="bg-card rounded-xl border border-border p-4">
             <p className="font-medium">{r.label}</p>
             <div className="grid grid-cols-3 gap-2 mt-2 text-sm">
               <div>
-                <p className="text-xs text-slate-400">Income</p>
+                <p className="text-xs text-muted-foreground">Income</p>
                 <p>Rs. {r.income.toLocaleString()}</p>
               </div>
               <div>
-                <p className="text-xs text-slate-400">Expenses</p>
+                <p className="text-xs text-muted-foreground">Expenses</p>
                 <p>Rs. {r.expenses.toLocaleString()}</p>
               </div>
               <div>
-                <p className="text-xs text-slate-400">Profit</p>
+                <p className="text-xs text-muted-foreground">Profit</p>
                 <p className="font-medium">Rs. {r.profit.toLocaleString()}</p>
               </div>
             </div>
@@ -78,9 +83,9 @@ export default async function ReportsPage() {
       </div>
 
       {/* Tablet/desktop: table */}
-      <div className="hidden sm:block bg-white rounded-xl border border-slate-200 overflow-x-auto">
+      <div className="hidden sm:block bg-card rounded-xl border border-border overflow-x-auto">
         <table className="w-full text-sm min-w-[480px]">
-          <thead className="bg-slate-50 text-left text-slate-500">
+          <thead className="bg-background text-left text-muted-foreground">
             <tr>
               <th className="px-4 py-3">Month</th>
               <th className="px-4 py-3 text-right">Income</th>
@@ -91,13 +96,13 @@ export default async function ReportsPage() {
           <tbody>
             {rows.length === 0 && (
               <tr>
-                <td colSpan={4} className="px-4 py-8 text-center text-slate-500">
+                <td colSpan={4} className="px-4 py-8 text-center text-muted-foreground">
                   No data yet — record some income and expenses first.
                 </td>
               </tr>
             )}
             {rows.map((r) => (
-              <tr key={r.label} className="border-t border-slate-100">
+              <tr key={r.label} className="border-t border-border">
                 <td className="px-4 py-3">{r.label}</td>
                 <td className="px-4 py-3 text-right">Rs. {r.income.toLocaleString()}</td>
                 <td className="px-4 py-3 text-right">Rs. {r.expenses.toLocaleString()}</td>

@@ -1,5 +1,19 @@
 import { createClient } from "@/lib/supabase/server";
 import { WhatsAppButton } from "@/components/whatsapp/WhatsAppButton";
+import { PageHeader } from "@/components/ui/PageHeader";
+import { StatCard } from "@/components/ui/StatCard";
+import { Card, CardHeader, CardTitle } from "@/components/ui/Card";
+import { Badge } from "@/components/ui/Badge";
+import { EmptyState } from "@/components/ui/EmptyState";
+import {
+  Banknote,
+  Users,
+  CalendarClock,
+  AlertCircle,
+  Sparkles,
+} from "lucide-react";
+import Link from "next/link";
+import { Button } from "@/components/ui/Button";
 
 type ActionItem = {
   id: string;
@@ -26,22 +40,17 @@ async function getTodaysActions(): Promise<ActionItem[]> {
   sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
   const [{ data: upcoming }, { data: overdueInvoices }, { data: recentAppts }] = await Promise.all([
-    // Appointments happening tomorrow that still need a reminder
     supabase
       .from("appointments")
       .select("id, scheduled_at, patients(full_name, phone)")
       .in("status", ["booked", "confirmed"])
       .gte("scheduled_at", startOfTomorrow.toISOString())
       .lt("scheduled_at", endOfTomorrow.toISOString()),
-
-    // Unpaid/partial invoices older than 7 days
     supabase
       .from("invoices")
       .select("id, total, issued_at, patients(full_name, phone)")
       .in("status", ["unpaid", "partial"])
       .lt("issued_at", sevenDaysAgo.toISOString()),
-
-    // Completed or no-show appointments in the last 3 days
     supabase
       .from("appointments")
       .select("id, scheduled_at, status, patients(full_name, phone)")
@@ -67,15 +76,14 @@ async function getTodaysActions(): Promise<ActionItem[]> {
 
   (overdueInvoices ?? []).forEach((inv: any) => {
     if (!inv.patients?.phone) return;
-    const daysOverdue = Math.floor((now.getTime() - new Date(inv.issued_at).getTime()) / 86400000);
     actions.push({
       id: `payment-${inv.id}`,
       patientName: inv.patients.full_name,
       phone: inv.patients.phone,
-      detail: `Rs. ${Number(inv.total).toLocaleString()} outstanding, ${daysOverdue} days`,
+      detail: `Outstanding Rs. ${Number(inv.total).toLocaleString()}`,
       template: "paymentReminder",
       args: [inv.patients.full_name, String(inv.total)],
-      label: "Send reminder",
+      label: "Payment reminder",
     });
   });
 
@@ -130,64 +138,92 @@ async function getStats() {
   return { todayRevenue, patientsToday, pending, outstanding };
 }
 
-const StatCard = ({ label, value }: { label: string; value: string }) => (
-  <div className="bg-white rounded-xl border border-slate-200 p-4 sm:p-5 shadow-sm min-w-0">
-    <p className="text-xs sm:text-sm text-slate-500 truncate">{label}</p>
-    <p className="text-xl sm:text-2xl font-semibold mt-1 text-[#1E3A5F] truncate">{value}</p>
-  </div>
-);
-
 export default async function DashboardPage() {
-  // Falls back gracefully if Supabase isn't configured yet.
   let stats = { todayRevenue: 0, patientsToday: 0, pending: 0, outstanding: 0 };
   let actions: ActionItem[] = [];
   try {
     [stats, actions] = await Promise.all([getStats(), getTodaysActions()]);
   } catch {
-    // Supabase env vars not set yet — show zeros/empty instead of crashing.
+    // Supabase env vars not set yet
   }
 
   return (
     <div className="space-y-6">
-      <h1 className="text-xl font-semibold">Dashboard</h1>
+      <PageHeader
+        title="Dashboard"
+        description="Today’s overview and follow-up actions"
+        actions={
+          <Link href="/portal/walk-in">
+            <Button size="md">
+              <Sparkles className="h-4 w-4" />
+              Walk-in
+            </Button>
+          </Link>
+        }
+      />
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <StatCard label="Today's Revenue" value={`Rs. ${stats.todayRevenue.toLocaleString()}`} />
-        <StatCard label="Patients Today" value={String(stats.patientsToday)} />
-        <StatCard label="Pending Appointments" value={String(stats.pending)} />
-        <StatCard label="Outstanding Dues" value={`Rs. ${stats.outstanding.toLocaleString()}`} />
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        <StatCard
+          label="Today's Revenue"
+          value={`Rs. ${stats.todayRevenue.toLocaleString()}`}
+          icon={<Banknote className="h-5 w-5" />}
+        />
+        <StatCard
+          label="Patients Today"
+          value={String(stats.patientsToday)}
+          icon={<Users className="h-5 w-5" />}
+        />
+        <StatCard
+          label="Pending Appointments"
+          value={String(stats.pending)}
+          icon={<CalendarClock className="h-5 w-5" />}
+        />
+        <StatCard
+          label="Outstanding Dues"
+          value={`Rs. ${stats.outstanding.toLocaleString()}`}
+          icon={<AlertCircle className="h-5 w-5" />}
+        />
       </div>
 
-      <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
-        <div className="flex items-center justify-between mb-3">
-          <h2 className="font-medium">Today&apos;s Actions</h2>
-          {actions.length > 0 && (
-            <span className="text-xs font-medium bg-[#F2A93B]/15 text-[#B8790C] rounded-full px-2.5 py-1">
-              {actions.length} to follow up
-            </span>
-          )}
-        </div>
+      <Card>
+        <CardHeader>
+          <div className="flex items-center gap-2">
+            <CardTitle>Today&apos;s Actions</CardTitle>
+            {actions.length > 0 && (
+              <Badge variant="warning">{actions.length} to follow up</Badge>
+            )}
+          </div>
+        </CardHeader>
 
         {actions.length === 0 ? (
-          <p className="text-sm text-slate-500">
-            Nothing needs follow-up today. Appointment reminders, overdue-payment
-            nudges, review requests, and missed-appointment follow-ups will appear
-            here automatically as patients and appointments are added.
-          </p>
+          <EmptyState
+            title="Nothing needs follow-up today"
+            description="Appointment reminders, overdue-payment nudges, review requests, and missed-appointment follow-ups will appear here automatically."
+          />
         ) : (
-          <ul className="divide-y divide-slate-100">
+          <ul className="divide-y divide-border -mx-1">
             {actions.map((a) => (
-              <li key={a.id} className="py-3 flex items-center justify-between gap-3 flex-wrap">
+              <li
+                key={a.id}
+                className="py-3.5 px-1 flex items-center justify-between gap-3 flex-wrap"
+              >
                 <div className="min-w-0">
-                  <p className="text-sm font-medium text-[#1E3A5F] truncate">{a.patientName}</p>
-                  <p className="text-xs text-slate-500">{a.detail}</p>
+                  <p className="text-sm font-medium text-foreground truncate">
+                    {a.patientName}
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-0.5">{a.detail}</p>
                 </div>
-                <WhatsAppButton phone={a.phone} template={a.template} args={a.args} label={a.label} />
+                <WhatsAppButton
+                  phone={a.phone}
+                  template={a.template}
+                  args={a.args}
+                  label={a.label}
+                />
               </li>
             ))}
           </ul>
         )}
-      </div>
+      </Card>
     </div>
   );
 }

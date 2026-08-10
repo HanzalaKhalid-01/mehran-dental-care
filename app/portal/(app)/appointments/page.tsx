@@ -3,6 +3,10 @@ import { AppointmentForm } from "@/components/appointments/AppointmentForm";
 import { AppointmentStatusSelect } from "@/components/appointments/AppointmentStatusSelect";
 import { WhatsAppButton } from "@/components/whatsapp/WhatsAppButton";
 import { DeleteButton } from "@/components/ui/DeleteButton";
+import { PageHeader } from "@/components/ui/PageHeader";
+import { Card, CardHeader, CardTitle } from "@/components/ui/Card";
+import { EmptyState } from "@/components/ui/EmptyState";
+import { Calendar } from "lucide-react";
 
 async function getAppointments() {
   const supabase = await createClient();
@@ -15,7 +19,10 @@ async function getAppointments() {
 
 async function getPatients() {
   const supabase = await createClient();
-  const { data } = await supabase.from("patients").select("id, full_name").order("full_name");
+  const { data } = await supabase
+    .from("patients")
+    .select("id, full_name")
+    .order("full_name");
   return data ?? [];
 }
 
@@ -30,92 +37,129 @@ export default async function AppointmentsPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-xl font-semibold">Appointments</h1>
+      <PageHeader
+        title="Appointments"
+        description="Book and manage clinic appointments"
+      />
 
-      <div className="bg-white rounded-xl border border-slate-200 p-5">
-        <h2 className="font-medium mb-3">Book Appointment</h2>
+      <Card>
+        <CardHeader>
+          <CardTitle>Book Appointment</CardTitle>
+        </CardHeader>
         <AppointmentForm patients={patients} />
-      </div>
+      </Card>
 
-      {/* Mobile: stacked cards */}
-      <div className="sm:hidden space-y-3">
-        {appointments.length === 0 && (
-          <div className="bg-white rounded-xl border border-slate-200 p-8 text-center text-slate-500">
-            No appointments yet.
-          </div>
-        )}
-        {appointments.map((a) => (
-          <div key={a.id} className="bg-white rounded-xl border border-slate-200 p-4">
-            <div className="flex items-start justify-between gap-3">
-              <div className="min-w-0">
-                <p className="font-medium truncate">{a.patients?.full_name}</p>
-                <p className="text-sm text-slate-500 mt-0.5">
-                  {new Date(a.scheduled_at).toLocaleString()}
-                </p>
-              </div>
-            </div>
-            <div className="mt-3">
-              <AppointmentStatusSelect id={a.id} status={a.status} />
-            </div>
-            <div className="flex items-center gap-2 flex-wrap mt-3 pt-3 border-t border-slate-100">
-              {a.patients?.phone && (
-                <WhatsAppButton
-                  phone={a.patients.phone}
-                  template="appointmentReminder"
-                  args={[a.patients.full_name, new Date(a.scheduled_at).toLocaleString()]}
-                  label="Remind"
-                />
-              )}
-              <DeleteButton table="appointments" id={a.id} confirmLabel="this appointment" />
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Tablet/desktop: table */}
-      <div className="hidden sm:block bg-white rounded-xl border border-slate-200 overflow-x-auto">
-        <table className="w-full text-sm min-w-[640px]">
-          <thead className="bg-slate-50 text-left text-slate-500">
-            <tr>
-              <th className="px-4 py-3">Patient</th>
-              <th className="px-4 py-3">Date/Time</th>
-              <th className="px-4 py-3">Status</th>
-              <th className="px-4 py-3">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {appointments.length === 0 && (
-              <tr>
-                <td colSpan={4} className="px-4 py-8 text-center text-slate-500">
-                  No appointments yet.
-                </td>
-              </tr>
-            )}
+      {appointments.length === 0 ? (
+        <Card padding="none">
+          <EmptyState
+            icon={<Calendar className="h-5 w-5" />}
+            title="No appointments yet"
+            description="Book your first appointment above."
+          />
+        </Card>
+      ) : (
+        <>
+          {/* Mobile cards */}
+          <div className="sm:hidden space-y-3">
             {appointments.map((a) => (
-              <tr key={a.id} className="border-t border-slate-100">
-                <td className="px-4 py-3 font-medium">{a.patients?.full_name}</td>
-                <td className="px-4 py-3">{new Date(a.scheduled_at).toLocaleString()}</td>
-                <td className="px-4 py-3">
+              <Card key={a.id} padding="sm">
+                <div className="min-w-0">
+                  <p className="font-medium truncate">{a.patients?.full_name}</p>
+                  <p className="text-sm text-muted-foreground mt-0.5">
+                    {new Date(a.scheduled_at).toLocaleString()}
+                  </p>
+                  {a.notes && (
+                    <p className="text-xs text-muted-foreground mt-1">{a.notes}</p>
+                  )}
+                </div>
+                <div className="mt-3">
                   <AppointmentStatusSelect id={a.id} status={a.status} />
-                </td>
-                <td className="px-4 py-3">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    {a.patients?.phone && (
-                      <WhatsAppButton
-                        phone={a.patients.phone}
-                        template="appointmentReminder"
-                        args={[a.patients.full_name, new Date(a.scheduled_at).toLocaleString()]}
-                        label="Remind"
-                      />
-                    )}
-                    <DeleteButton table="appointments" id={a.id} confirmLabel="this appointment" />
-                  </div>
-                </td>
-              </tr>
+                </div>
+                <div className="flex items-center gap-2 flex-wrap mt-3 pt-3 border-t border-border">
+                  {a.patients?.phone && (
+                    <WhatsAppButton
+                      phone={a.patients.phone}
+                      template="appointmentReminder"
+                      args={[
+                        a.patients.full_name,
+                        new Date(a.scheduled_at).toLocaleString(),
+                      ]}
+                      label="Remind"
+                    />
+                  )}
+                  <DeleteButton
+                    table="appointments"
+                    id={a.id}
+                    confirmLabel="this appointment"
+                  />
+                </div>
+              </Card>
             ))}
-          </tbody>
-        </table>
-      </div>
+          </div>
+
+          {/* Desktop table */}
+          <Card padding="none" className="hidden sm:block overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-border bg-muted/40">
+                    <th className="text-left font-medium text-muted-foreground px-5 py-3">
+                      Patient
+                    </th>
+                    <th className="text-left font-medium text-muted-foreground px-5 py-3">
+                      Date & time
+                    </th>
+                    <th className="text-left font-medium text-muted-foreground px-5 py-3">
+                      Status
+                    </th>
+                    <th className="text-right font-medium text-muted-foreground px-5 py-3">
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-border">
+                  {appointments.map((a) => (
+                    <tr key={a.id} className="hover:bg-muted/30 transition-colors">
+                      <td className="px-5 py-3.5">
+                        <p className="font-medium">{a.patients?.full_name}</p>
+                        {a.notes && (
+                          <p className="text-xs text-muted-foreground mt-0.5">{a.notes}</p>
+                        )}
+                      </td>
+                      <td className="px-5 py-3.5 text-muted-foreground">
+                        {new Date(a.scheduled_at).toLocaleString()}
+                      </td>
+                      <td className="px-5 py-3.5">
+                        <AppointmentStatusSelect id={a.id} status={a.status} />
+                      </td>
+                      <td className="px-5 py-3.5">
+                        <div className="flex items-center justify-end gap-2 flex-wrap">
+                          {a.patients?.phone && (
+                            <WhatsAppButton
+                              phone={a.patients.phone}
+                              template="appointmentReminder"
+                              args={[
+                                a.patients.full_name,
+                                new Date(a.scheduled_at).toLocaleString(),
+                              ]}
+                              label="Remind"
+                            />
+                          )}
+                          <DeleteButton
+                            table="appointments"
+                            id={a.id}
+                            confirmLabel="this appointment"
+                          />
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </Card>
+        </>
+      )}
     </div>
   );
 }

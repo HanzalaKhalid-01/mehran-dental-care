@@ -30,13 +30,13 @@ export function ExportButtons({ rows }: { rows: Row[] }) {
     <div className="flex gap-2">
       <button
         onClick={exportExcel}
-        className="rounded-md border border-slate-300 px-3 py-1.5 text-sm font-medium hover:bg-slate-50"
+        className="rounded-md border border-border px-3 py-1.5 text-sm font-medium hover:bg-background"
       >
         Export Excel
       </button>
       <button
         onClick={exportPdf}
-        className="rounded-md border border-slate-300 px-3 py-1.5 text-sm font-medium hover:bg-slate-50"
+        className="rounded-md border border-border px-3 py-1.5 text-sm font-medium hover:bg-background"
       >
         Export PDF
       </button>

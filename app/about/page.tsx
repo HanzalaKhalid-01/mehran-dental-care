@@ -74,7 +74,7 @@ export default function AboutPage() {
         <Stagger className="grid grid-cols-1 sm:grid-cols-3 gap-5 mt-10">
           {pillars.map((p) => (
             <StaggerItem key={p.title}>
-              <div className="h-full rounded-2xl border border-line p-6">
+              <div className="h-full rounded-2xl border border-border p-6">
                 <div className="w-9 h-9 rounded-full bg-mint text-teal-dark flex items-center justify-center">
                   <p.icon className="w-4 h-4" strokeWidth={2} />
                 </div>

@@ -3,12 +3,22 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { Button } from "@/components/ui/Button";
+import { useOnlineStatus } from "@/lib/offline/useOnlineStatus";
 
-export function RecordPaymentButton({ invoiceId, total }: { invoiceId: string; total: number }) {
+export function RecordPaymentButton({
+  invoiceId,
+  total,
+}: {
+  invoiceId: string;
+  total: number;
+}) {
   const router = useRouter();
+  const { isOffline } = useOnlineStatus();
   const [saving, setSaving] = useState(false);
 
   async function handlePay() {
+    if (isOffline) return;
     setSaving(true);
     const supabase = createClient();
 
@@ -26,12 +36,14 @@ export function RecordPaymentButton({ invoiceId, total }: { invoiceId: string; t
   }
 
   return (
-    <button
+    <Button
+      size="sm"
       onClick={handlePay}
-      disabled={saving}
-      className="rounded-md bg-[#0EA5A4] text-white px-3 py-1.5 text-sm font-medium disabled:opacity-50"
+      loading={saving}
+      disabled={isOffline}
+      title={isOffline ? "Connect to the internet to record payment" : undefined}
     >
       {saving ? "Recording..." : "Mark Paid (Cash)"}
-    </button>
+    </Button>
   );
 }

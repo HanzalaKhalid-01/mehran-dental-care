@@ -28,22 +28,22 @@ export default function ContactPage() {
       <section className="mx-auto max-w-6xl px-5 md:px-8 py-16 md:py-20 grid grid-cols-1 md:grid-cols-2 gap-10">
         <Stagger className="space-y-6">
           <StaggerItem>
-            <div className="rounded-2xl border border-line p-7">
+            <div className="rounded-2xl border border-border bg-card p-7">
               <div className="w-9 h-9 rounded-full bg-mint text-teal-dark flex items-center justify-center">
                 <MapPin className="w-4 h-4" strokeWidth={2} />
               </div>
-              <p className="font-display font-bold text-ink mt-4">Address</p>
-              <p className="text-sm text-ink/60 mt-2 leading-relaxed">{CLINIC_ADDRESS}</p>
+              <p className="font-display font-bold text-card-foreground mt-4">Address</p>
+              <p className="text-sm text-muted-foreground mt-2 leading-relaxed">{CLINIC_ADDRESS}</p>
             </div>
           </StaggerItem>
 
           <StaggerItem>
-            <div className="rounded-2xl border border-line p-7">
+            <div className="rounded-2xl border border-border bg-card p-7">
               <div className="w-9 h-9 rounded-full bg-mint text-teal-dark flex items-center justify-center">
                 <MessageCircle className="w-4 h-4" strokeWidth={2} />
               </div>
-              <p className="font-display font-bold text-ink mt-4">Phone / WhatsApp</p>
-              <p className="text-sm text-ink/60 mt-2">{CLINIC_PHONE}</p>
+              <p className="font-display font-bold text-card-foreground mt-4">Phone / WhatsApp</p>
+              <p className="text-sm text-muted-foreground mt-2">{CLINIC_PHONE}</p>
               <div className="flex flex-wrap gap-3 mt-4">
                 <a
                   href={bookingLink}
@@ -57,7 +57,7 @@ export default function ContactPage() {
                   href={inquiryLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="rounded-full border border-ink/15 text-ink font-semibold px-5 py-2.5 text-sm hover:bg-mint transition-colors"
+                  className="rounded-full border border-border text-ink font-semibold px-5 py-2.5 text-sm hover:bg-muted transition-colors"
                 >
                   Ask a question
                 </a>
@@ -66,27 +66,27 @@ export default function ContactPage() {
           </StaggerItem>
 
           <StaggerItem>
-            <div className="rounded-2xl border border-line p-7">
+            <div className="rounded-2xl border border-border bg-card p-7">
               <div className="w-9 h-9 rounded-full bg-mint text-teal-dark flex items-center justify-center">
                 <Clock className="w-4 h-4" strokeWidth={2} />
               </div>
-              <p className="font-display font-bold text-ink mt-4">Hours</p>
+              <p className="font-display font-bold text-card-foreground mt-4">Hours</p>
               <div className="mt-3 divide-y divide-line">
                 {weeklyHours.map((d) => (
                   <div key={d.day} className="flex items-center justify-between py-2 text-sm">
                     <span className="text-ink/60">{d.day}</span>
-                    <span className="font-medium text-ink text-right">{d.shifts.join(" · ")}</span>
+                    <span className="font-medium text-card-foreground text-right">{d.shifts.join(" · ")}</span>
                   </div>
                 ))}
               </div>
-              <p className="text-xs text-ink/50 mt-3">
+              <p className="text-xs text-muted-foreground mt-3">
                 Timings can occasionally shift — message us on WhatsApp to confirm before you head over.
               </p>
             </div>
           </StaggerItem>
         </Stagger>
 
-        <Reveal delay={0.1} className="rounded-2xl overflow-hidden border border-line h-80 md:h-full min-h-80">
+        <Reveal delay={0.1} className="rounded-2xl overflow-hidden border border-border h-80 md:h-full min-h-80">
           <iframe
             title="Mehran Dental Care location"
             src={mapEmbedSrc}

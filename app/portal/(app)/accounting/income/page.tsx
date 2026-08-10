@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { PageHeader } from "@/components/ui/PageHeader";
 
 async function getPayments() {
   const supabase = await createClient();
@@ -21,29 +22,32 @@ export default async function IncomePage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-xl font-semibold">Income</h1>
+      <PageHeader
+        title="Income"
+        description="Payments received"
+      />
 
-      <div className="bg-white rounded-xl border border-slate-200 p-5">
-        <p className="text-sm text-slate-500">Total recorded income</p>
-        <p className="text-2xl font-semibold text-[#1E3A5F]">Rs. {total.toLocaleString()}</p>
+      <div className="bg-card rounded-xl border border-border p-5">
+        <p className="text-sm text-muted-foreground">Total recorded income</p>
+        <p className="text-2xl font-semibold text-foreground">Rs. {total.toLocaleString()}</p>
       </div>
 
       {/* Mobile: stacked cards */}
       <div className="sm:hidden space-y-3">
         {payments.length === 0 && (
-          <div className="bg-white rounded-xl border border-slate-200 p-8 text-center text-slate-500">
+          <div className="bg-card rounded-xl border border-border p-8 text-center text-muted-foreground">
             No income recorded yet.
           </div>
         )}
         {payments.map((p) => (
-          <div key={p.id} className="bg-white rounded-xl border border-slate-200 p-4">
+          <div key={p.id} className="bg-card rounded-xl border border-border p-4">
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
                 <p className="font-medium truncate">{p.invoices?.patients?.full_name}</p>
-                <p className="text-sm text-slate-500 mt-0.5">
+                <p className="text-sm text-muted-foreground mt-0.5">
                   {p.invoices?.invoice_no} · <span className="capitalize">{p.method}</span>
                 </p>
-                <p className="text-xs text-slate-400 mt-1">
+                <p className="text-xs text-muted-foreground mt-1">
                   {new Date(p.paid_at).toLocaleDateString()}
                 </p>
               </div>
@@ -56,9 +60,9 @@ export default async function IncomePage() {
       </div>
 
       {/* Tablet/desktop: table */}
-      <div className="hidden sm:block bg-white rounded-xl border border-slate-200 overflow-x-auto">
+      <div className="hidden sm:block bg-card rounded-xl border border-border overflow-x-auto">
         <table className="w-full text-sm min-w-[560px]">
-          <thead className="bg-slate-50 text-left text-slate-500">
+          <thead className="bg-background text-left text-muted-foreground">
             <tr>
               <th className="px-4 py-3">Date</th>
               <th className="px-4 py-3">Patient</th>
@@ -70,13 +74,13 @@ export default async function IncomePage() {
           <tbody>
             {payments.length === 0 && (
               <tr>
-                <td colSpan={5} className="px-4 py-8 text-center text-slate-500">
+                <td colSpan={5} className="px-4 py-8 text-center text-muted-foreground">
                   No income recorded yet.
                 </td>
               </tr>
             )}
             {payments.map((p) => (
-              <tr key={p.id} className="border-t border-slate-100">
+              <tr key={p.id} className="border-t border-border">
                 <td className="px-4 py-3">{new Date(p.paid_at).toLocaleDateString()}</td>
                 <td className="px-4 py-3">{p.invoices?.patients?.full_name}</td>
                 <td className="px-4 py-3">{p.invoices?.invoice_no}</td>

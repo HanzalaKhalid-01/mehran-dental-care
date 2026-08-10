@@ -4,9 +4,16 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import type { Patient } from "@/types/database";
+import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
+import { Select } from "@/components/ui/Select";
+import { Card } from "@/components/ui/Card";
+import { OfflineNotice } from "@/components/offline/OfflineNotice";
+import { useOnlineStatus } from "@/lib/offline/useOnlineStatus";
 
 export function PatientForm({ patient }: { patient?: Patient }) {
   const router = useRouter();
+  const { isOffline } = useOnlineStatus();
   const isEdit = Boolean(patient);
   const [fullName, setFullName] = useState(patient?.full_name ?? "");
   const [phone, setPhone] = useState(patient?.phone ?? "");
@@ -18,6 +25,7 @@ export function PatientForm({ patient }: { patient?: Patient }) {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (isOffline) return;
     setSaving(true);
     setError(null);
 
@@ -46,73 +54,67 @@ export function PatientForm({ patient }: { patient?: Patient }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 max-w-md">
-      <div>
-        <label className="block text-sm font-medium mb-1">Full name *</label>
-        <input
+    <Card className="max-w-lg">
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <Input
+          label="Full name"
           required
           value={fullName}
           onChange={(e) => setFullName(e.target.value)}
-          className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
           placeholder="e.g. Ayesha Khan"
         />
-      </div>
 
-      <div>
-        <label className="block text-sm font-medium mb-1">Phone (WhatsApp) *</label>
-        <input
+        <Input
+          label="Phone (WhatsApp)"
           required
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
-          className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
           placeholder="03XXXXXXXXX"
         />
-      </div>
 
-      <div className="grid grid-cols-2 gap-3">
-        <div>
-          <label className="block text-sm font-medium mb-1">Date of birth</label>
-          <input
+        <div className="grid grid-cols-2 gap-3">
+          <Input
+            label="Date of birth"
             type="date"
             value={dob}
             onChange={(e) => setDob(e.target.value)}
-            className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
           />
-        </div>
-        <div>
-          <label className="block text-sm font-medium mb-1">Gender</label>
-          <select
+          <Select
+            label="Gender"
             value={gender}
             onChange={(e) => setGender(e.target.value)}
-            className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
-          >
-            <option value="">—</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-            <option value="other">Other</option>
-          </select>
+            options={[
+              { value: "", label: "Prefer not to say" },
+              { value: "female", label: "Female" },
+              { value: "male", label: "Male" },
+              { value: "other", label: "Other" },
+            ]}
+          />
         </div>
-      </div>
 
-      <div>
-        <label className="block text-sm font-medium mb-1">Address</label>
-        <textarea
+        <Input
+          label="Address"
           value={address}
           onChange={(e) => setAddress(e.target.value)}
-          className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
-          rows={2}
+          placeholder="Optional"
         />
-      </div>
 
-      {error && <p className="text-sm text-red-600">{error}</p>}
+        <OfflineNotice />
+        {error && <p className="text-sm text-destructive">{error}</p>}
 
-      <button
-        type="submit"
-        disabled={saving}
-        className="rounded-md bg-[#0EA5A4] text-white px-4 py-2 text-sm font-medium disabled:opacity-50"
-      >
-        {saving ? "Saving..." : isEdit ? "Update Patient" : "Save Patient"}
-      </button>
-    </form>
+        <div className="flex items-center gap-3 pt-2">
+          <Button type="submit" loading={saving} disabled={isOffline}>
+            {saving ? "Saving..." : isEdit ? "Save changes" : "Add patient"}
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => router.push("/portal/patients")}
+          >
+            Cancel
+          </Button>
+        </div>
+      </form>
+    </Card>
   );
 }

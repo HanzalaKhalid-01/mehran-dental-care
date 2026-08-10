@@ -3,13 +3,25 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { Button } from "@/components/ui/Button";
+import { useOnlineStatus } from "@/lib/offline/useOnlineStatus";
 
-export function DeleteButton({ table, id, confirmLabel }: { table: string; id: string; confirmLabel: string }) {
+export function DeleteButton({
+  table,
+  id,
+  confirmLabel,
+}: {
+  table: string;
+  id: string;
+  confirmLabel: string;
+}) {
   const router = useRouter();
+  const { isOffline } = useOnlineStatus();
   const [confirming, setConfirming] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
   async function handleDelete() {
+    if (isOffline) return;
     setDeleting(true);
     const supabase = createClient();
     await supabase.from(table).delete().eq("id", id);
@@ -20,31 +32,33 @@ export function DeleteButton({ table, id, confirmLabel }: { table: string; id: s
 
   if (confirming) {
     return (
-      <span className="inline-flex items-center gap-2">
-        <span className="text-xs text-slate-500">Delete {confirmLabel}?</span>
-        <button
-          onClick={handleDelete}
-          disabled={deleting}
-          className="text-xs rounded-md bg-red-600 text-white px-2 py-1 font-medium disabled:opacity-50"
-        >
-          {deleting ? "..." : "Yes, delete"}
-        </button>
-        <button
-          onClick={() => setConfirming(false)}
-          className="text-xs rounded-md border border-slate-300 px-2 py-1 font-medium"
-        >
+      <span className="inline-flex items-center gap-1.5 flex-wrap">
+        <span className="text-xs text-muted-foreground">
+          {isOffline
+            ? "Connect to the internet to delete."
+            : `Delete ${confirmLabel}?`}
+        </span>
+        {!isOffline && (
+          <Button size="sm" variant="danger" onClick={handleDelete} loading={deleting}>
+            {deleting ? "..." : "Yes"}
+          </Button>
+        )}
+        <Button size="sm" variant="outline" onClick={() => setConfirming(false)}>
           Cancel
-        </button>
+        </Button>
       </span>
     );
   }
 
   return (
-    <button
+    <Button
+      size="sm"
+      variant="ghost"
       onClick={() => setConfirming(true)}
-      className="text-xs rounded-md border border-slate-300 px-2 py-1 font-medium hover:bg-slate-50"
+      disabled={isOffline}
+      title={isOffline ? "Connect to the internet to delete" : undefined}
     >
       Delete
-    </button>
+    </Button>
   );
 }
