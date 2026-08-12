@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import { PatientCombobox } from "@/components/ui/PatientCombobox";
 import { Select } from "@/components/ui/Select";
 import { OfflineNotice } from "@/components/offline/OfflineNotice";
 import { useOnlineStatus } from "@/lib/offline/useOnlineStatus";
@@ -70,13 +71,12 @@ export function InvoiceForm({
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Select
+        <PatientCombobox
           label="Patient"
           required
           value={patientId}
-          onChange={(e) => setPatientId(e.target.value)}
-          placeholder="Select patient"
-          options={patients.map((p) => ({ value: p.id, label: p.full_name }))}
+          onChange={setPatientId}
+          patients={patients}
         />
         <Input
           label="Treatment / description"

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import { PatientCombobox } from "@/components/ui/PatientCombobox";
 import { Select } from "@/components/ui/Select";
 import { Card, CardHeader, CardTitle } from "@/components/ui/Card";
 import { UserPlus, Receipt, CheckCircle2 } from "lucide-react";
@@ -235,16 +236,12 @@ export function WalkInForm({ existingPatients }: { existingPatients: PatientOpti
             />
           </div>
         ) : (
-          <Select
+          <PatientCombobox
             label="Select patient"
             required
             value={patientId}
-            onChange={(e) => setPatientId(e.target.value)}
-            placeholder="Choose a patient..."
-            options={existingPatients.map((p) => ({
-              value: p.id,
-              label: `${p.full_name} — ${p.phone}`,
-            }))}
+            onChange={setPatientId}
+            patients={existingPatients}
           />
         )}
       </Card>
@@ -319,8 +316,8 @@ export function WalkInForm({ existingPatients }: { existingPatients: PatientOpti
         </div>
       )}
 
-      <div className="flex items-center gap-3">
-        <Button type="submit" loading={saving} size="lg" disabled={isOffline}>
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+        <Button type="submit" loading={saving} size="lg" disabled={isOffline} className="w-full sm:w-auto">
           {saving ? "Saving..." : markPaid ? "Create patient & record payment" : "Create patient & invoice"}
         </Button>
         <Button
@@ -328,6 +325,7 @@ export function WalkInForm({ existingPatients }: { existingPatients: PatientOpti
           variant="outline"
           size="lg"
           onClick={() => router.push("/portal/dashboard")}
+          className="w-full sm:w-auto"
         >
           Cancel
         </Button>

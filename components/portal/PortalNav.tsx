@@ -124,10 +124,7 @@ export function PortalNav() {
           <div className="flex-1 overflow-y-auto py-2">
             <NavLinks onNavigate={() => setOpen(false)} />
           </div>
-          <div className="border-t border-white/8 p-2 space-y-1">
-            <div className="px-2">
-              <ThemeToggle variant="sidebar" className="w-full justify-start gap-3 px-3" />
-            </div>
+          <div className="border-t border-white/8 p-2">
             <SignOutButton />
           </div>
         </div>
@@ -144,10 +141,7 @@ export function PortalNav() {
         <div className="flex-1 overflow-y-auto py-3">
           <NavLinks />
         </div>
-        <div className="border-t border-white/8 p-2 space-y-1">
-          <div className="flex items-center justify-between px-2">
-            <ThemeToggle variant="sidebar" />
-          </div>
+        <div className="border-t border-white/8 p-2">
           <SignOutButton />
         </div>
       </aside>
