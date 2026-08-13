@@ -5,6 +5,7 @@ import "@fontsource/karla/500.css";
 import "@fontsource/karla/700.css";
 import "./globals.css";
 import { ThemeProvider } from "@/lib/theme/ThemeProvider";
+import { ChatAgent } from "@/components/agent/ChatAgent";
 
 export const metadata: Metadata = {
   title: "Mehran Dental Care — Hyderabad",
@@ -43,7 +44,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
       <body className="min-h-full flex flex-col">
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+          {children}
+          <ChatAgent />
+        </ThemeProvider>
       </body>
     </html>
   );

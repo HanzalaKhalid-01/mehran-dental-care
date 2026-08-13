@@ -282,7 +282,7 @@ export default function HomePage() {
 
       {/* CTA banner */}
       <section className="mx-auto max-w-6xl px-5 md:px-8 pt-20 pb-10 md:pt-28 md:pb-12">
-        <Reveal className="relative overflow-hidden rounded-tl-[3rem] rounded-br-[3rem] rounded-tr-2xl rounded-bl-2xl bg-navy text-white px-8 py-16 md:px-16 md:py-24 text-center flex flex-col items-center justify-center min-h-[320px] md:min-h-[380px]">
+        <Reveal className="relative overflow-hidden rounded-tl-[3rem] rounded-br-[3rem] rounded-tr-2xl rounded-bl-2xl bg-navy text-white px-8 py-16 md:px-16 md:py-24 text-center flex flex-col items-center justify-center min-h-[320px] md:min-h-[380px] shadow-xl shadow-black/20 dark:shadow-black/60 ring-1 ring-white/10">
           <SmileArc className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-72 h-24 text-teal/30" />
           <h2 className="font-display font-extrabold text-3xl md:text-5xl">Ready for your next visit?</h2>
           <p className="text-white/60 mt-3 max-w-md mx-auto">
