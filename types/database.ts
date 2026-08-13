@@ -59,6 +59,15 @@ export type Expense = {
   receipt_url: string | null;
 };
 
+export type PublicReview = {
+  id: string;
+  name: string;
+  rating: number;
+  comment: string;
+  status: "pending" | "approved" | "rejected";
+  created_at: string;
+};
+
 // Placeholder — supabase-js just needs *a* Database type; refine after `supabase gen types`.
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Database = any;

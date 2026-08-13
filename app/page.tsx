@@ -260,14 +260,19 @@ export default function HomePage() {
                 <span>· {googleReviewCount} reviews</span>
               </div>
             </div>
-            <a
-              href={googleReviewsUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-sm font-semibold text-teal hover:text-teal-dark"
-            >
-              View all on Google →
-            </a>
+            <div className="flex items-center gap-5">
+              <Link href="/reviews" className="text-sm font-semibold text-teal hover:text-teal-dark">
+                Leave a review →
+              </Link>
+              <a
+                href={googleReviewsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm font-semibold text-teal hover:text-teal-dark"
+              >
+                View all on Google →
+              </a>
+            </div>
           </Reveal>
 
           <Stagger className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">

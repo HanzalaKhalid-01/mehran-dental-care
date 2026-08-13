@@ -25,4 +25,37 @@ export const galleryPhotos = [
     src: "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWkQUZAu1ZRsi4FQlioXbPRM2lJE1jMEEff11DIfHstLDKKlWqWz0QqPIJTstI7Jy_Rie0Ij6PP9ix0Iv9HQ8wDQU3_2FJWRlAwhc2p58Nm-3JJyjfwjmVvhys61skqp3Sj-hIyfYEV7AVdO=s680-w680-h510-rw",
     alt: "Mehran Dental Care clinic",
   },
+  // Clinical & lab work photos supplied by the owner
+  {
+    src: "/gallery/clinical-work-1.jpg",
+    alt: "Dental treatment in progress at Mehran Dental Care",
+  },
+  {
+    src: "/gallery/clinical-work-2.jpg",
+    alt: "Dental treatment in progress at Mehran Dental Care",
+  },
+  {
+    src: "/gallery/clinical-work-3.jpg",
+    alt: "Dental treatment in progress at Mehran Dental Care",
+  },
+  {
+    src: "/gallery/clinical-work-4.jpg",
+    alt: "Dental treatment in progress at Mehran Dental Care",
+  },
+  {
+    src: "/gallery/lab-work-1.jpg",
+    alt: "Custom dental crown and bridge lab work",
+  },
+  {
+    src: "/gallery/lab-work-2.jpg",
+    alt: "Custom dental crown lab work",
+  },
+  {
+    src: "/gallery/lab-work-3.jpg",
+    alt: "Custom dental bridge lab work",
+  },
+  {
+    src: "/gallery/lab-work-4.jpg",
+    alt: "Custom dental veneer lab work",
+  },
 ] as const;

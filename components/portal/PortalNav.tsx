@@ -12,6 +12,7 @@ import {
   FileText,
   BarChart3,
   UserPlus,
+  Star,
   Menu,
   X,
   LogOut,
@@ -28,6 +29,7 @@ const navItems = [
   { href: "/portal/accounting/expenses", label: "Expenses", icon: Receipt },
   { href: "/portal/accounting/invoices", label: "Invoices", icon: FileText },
   { href: "/portal/accounting/reports", label: "Reports", icon: BarChart3 },
+  { href: "/portal/reviews", label: "Reviews", icon: Star },
 ];
 
 function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
