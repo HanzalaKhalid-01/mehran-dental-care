@@ -5,7 +5,7 @@ type Variant = "default" | "success" | "warning" | "danger" | "info" | "muted";
 const variants: Record<Variant, string> = {
   default: "bg-primary/10 text-primary",
   success: "bg-success/10 text-success",
-  warning: "bg-amber-400 text-amber-950 dark:bg-amber-400/20 dark:text-amber-300",
+  warning: "bg-orange-500 text-white dark:bg-amber-400/20 dark:text-amber-300",
   danger: "bg-destructive/10 text-destructive",
   info: "bg-sky-500/10 text-sky-600 dark:text-sky-400",
   muted: "bg-muted text-muted-foreground",
