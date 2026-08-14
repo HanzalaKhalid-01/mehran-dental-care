@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { SignOutButton } from "@/components/auth/SignOutButton";
 import { ThemeToggle } from "@/components/theme/ThemeToggle";
+import { usePortalCounts } from "@/lib/hooks/usePortalCounts";
 
 const navItems = [
   { href: "/portal/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -32,8 +33,30 @@ const navItems = [
   { href: "/portal/reviews", label: "Reviews", icon: Star },
 ];
 
+function NavCountBadge({ count }: { count: number }) {
+  if (count <= 0) return null;
+  return (
+    <span
+      className="
+        ml-auto inline-flex h-5 min-w-5 items-center justify-center rounded-full
+        bg-destructive px-1.5 text-[11px] font-bold leading-none text-destructive-foreground
+        shadow-[0_0_8px_1px_rgba(239,68,68,0.5)]
+      "
+      aria-label={`${count} new`}
+    >
+      {count > 99 ? "99+" : count}
+    </span>
+  );
+}
+
 function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname();
+  const { newAppointments, pendingReviews } = usePortalCounts();
+
+  const counts: Record<string, number> = {
+    "/portal/appointments": newAppointments,
+    "/portal/reviews": pendingReviews,
+  };
 
   return (
     <nav className="flex flex-col gap-0.5 px-2 py-2">
@@ -42,6 +65,7 @@ function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
           pathname === item.href ||
           (item.href !== "/portal/dashboard" && pathname.startsWith(item.href));
         const Icon = item.icon;
+        const count = counts[item.href] ?? 0;
         return (
           <Link
             key={item.href}
@@ -61,6 +85,7 @@ function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
               strokeWidth={active ? 2.25 : 2}
             />
             <span>{item.label}</span>
+            <NavCountBadge count={count} />
           </Link>
         );
       })}
