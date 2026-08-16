@@ -96,6 +96,8 @@ function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
 export function PortalNav() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
+  const { newAppointments, pendingReviews } = usePortalCounts();
+  const totalPending = newAppointments + pendingReviews;
 
   useEffect(() => {
     setOpen(false);
@@ -117,9 +119,15 @@ export function PortalNav() {
             type="button"
             aria-label={open ? "Close menu" : "Open menu"}
             onClick={() => setOpen((v) => !v)}
-            className="p-2 -ml-2 rounded-lg hover:bg-sidebar-hover transition"
+            className="relative p-2 -ml-2 rounded-lg hover:bg-sidebar-hover transition"
           >
             {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            {!open && totalPending > 0 && (
+              <span className="absolute top-1.5 right-1.5 flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-destructive opacity-75" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-destructive" />
+              </span>
+            )}
           </button>
           <span className="font-semibold text-sm tracking-tight">Mehran Dental</span>
         </div>

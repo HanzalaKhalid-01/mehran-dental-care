@@ -11,6 +11,7 @@ import { Card, CardHeader, CardTitle } from "@/components/ui/Card";
 import { UserPlus, Receipt, CheckCircle2 } from "lucide-react";
 import { OfflineNotice } from "@/components/offline/OfflineNotice";
 import { useOnlineStatus } from "@/lib/offline/useOnlineStatus";
+import { useOfflineQueue } from "@/lib/offline/useOfflineQueue";
 
 type PatientOption = { id: string; full_name: string; phone: string };
 
@@ -25,6 +26,7 @@ const PAYMENT_METHODS = [
 export function WalkInForm({ existingPatients }: { existingPatients: PatientOption[] }) {
   const router = useRouter();
   const { isOffline } = useOnlineStatus();
+  const { queue } = useOfflineQueue();
   const [mode, setMode] = useState<"new" | "existing">("new");
 
   // Patient fields
@@ -46,10 +48,51 @@ export function WalkInForm({ existingPatients }: { existingPatients: PatientOpti
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (isOffline) return;
     setSaving(true);
     setError(null);
     setSuccess(null);
+
+    // ── Offline: queue and return ──────────────────────────────────────────
+    if (isOffline) {
+      if (mode === "new" && (!fullName.trim() || !phone.trim())) {
+        setError("Patient name and phone are required.");
+        setSaving(false);
+        return;
+      }
+      if (mode === "existing" && !patientId) {
+        setError("Please select an existing patient.");
+        setSaving(false);
+        return;
+      }
+      const total = Number(amount);
+      if (!description.trim() || !total || total <= 0) {
+        setError("Treatment description and a valid amount are required.");
+        setSaving(false);
+        return;
+      }
+      queue(
+        `Walk-in — ${mode === "new" ? fullName.trim() : "Existing patient"} · Rs. ${total}`,
+        {
+          type: "walk_in",
+          mode,
+          patientId,
+          fullName: fullName.trim(),
+          phone: phone.trim(),
+          gender,
+          dob,
+          description: description.trim(),
+          amount: total,
+          markPaid,
+          paymentMethod,
+        }
+      );
+      setSaving(false);
+      setSuccess("Saved offline — will sync automatically when you reconnect.");
+      setFullName(""); setPhone(""); setGender(""); setDob(""); setPatientId("");
+      setDescription(""); setAmount(""); setMarkPaid(true); setPaymentMethod("cash");
+      return;
+    }
+    // ── Online: proceed as normal ──────────────────────────────────────────
 
     const supabase = createClient();
     let finalPatientId = patientId;
@@ -317,8 +360,8 @@ export function WalkInForm({ existingPatients }: { existingPatients: PatientOpti
       )}
 
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-        <Button type="submit" loading={saving} size="lg" disabled={isOffline} className="w-full sm:w-auto">
-          {saving ? "Saving..." : markPaid ? "Create patient & record payment" : "Create patient & invoice"}
+        <Button type="submit" loading={saving} size="lg" className="w-full sm:w-auto">
+          {saving ? "Saving..." : isOffline ? "Save offline" : markPaid ? "Create patient & record payment" : "Create patient & invoice"}
         </Button>
         <Button
           type="button"

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { Eye, EyeOff } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
@@ -13,6 +14,7 @@ export function LoginForm() {
   const { isOffline } = useOnlineStatus();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -54,10 +56,24 @@ export function LoginForm() {
       <Input
         label="Password"
         required
-        type="password"
+        type={showPassword ? "text" : "password"}
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         autoComplete="current-password"
+        rightElement={
+          <button
+            type="button"
+            tabIndex={-1}
+            aria-label={showPassword ? "Hide password" : "Show password"}
+            onClick={() => setShowPassword((v) => !v)}
+            className="text-muted-foreground hover:text-foreground transition-colors focus:outline-none"
+          >
+            {showPassword
+              ? <EyeOff className="h-4 w-4" />
+              : <Eye className="h-4 w-4" />
+            }
+          </button>
+        }
       />
 
       <OfflineNotice />
