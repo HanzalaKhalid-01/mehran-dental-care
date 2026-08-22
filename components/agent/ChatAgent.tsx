@@ -72,8 +72,8 @@ export function ChatAgent() {
     if (/service|treatment|do you|what do you|offer|provide/.test(lower)) {
       return `We offer:\n${CLINIC.services.map((s) => `• ${s}`).join("\n")}\n\nWould you like to request an appointment?`;
     }
-    if (/doctor|dentist|usama|shakir|who/.test(lower)) {
-      return `Our doctors are Dr. Usama and Mr. Shakir.\n\nWould you like to request an appointment?`;
+    if (/doctor|dentist|usama|wajeeha|who/.test(lower)) {
+      return `Our doctors are Dr. Usama and Dr. Wajeeha.\n\nWould you like to request an appointment?`;
     }
     if (/book|appointment|slot|visit|come|schedule|request/.test(lower)) {
       return null; // trigger booking flow

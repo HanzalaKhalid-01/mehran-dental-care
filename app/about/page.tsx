@@ -56,7 +56,7 @@ export default function AboutPage() {
           </p>
           <p className="text-ink/80 leading-relaxed mt-4">
             Patients on Google frequently mention <strong>Dr. Usama</strong> and{" "}
-            <strong>Mr. Shakir</strong> as part of the team here, describing both as
+            <strong>Dr. Wajeeha</strong> as part of the team here, describing both as
             attentive and easy to work with.
           </p>
         </Reveal>
