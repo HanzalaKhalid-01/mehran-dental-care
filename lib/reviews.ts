@@ -11,7 +11,7 @@ export const reviewHighlights = [
     text: "A patient described real relief after treatment from Dr. Usama, thanking him warmly for the results.",
   },
   {
-    text: "One patient who'd had root canal treatment about a year and a half earlier called both doctors very cooperative, giving a slight edge to Mr. Shakir.",
+    text: "One patient who'd had root canal treatment about a year and a half earlier called both doctors very cooperative.",
   },
   {
     text: "Another patient said they left pain-free and very satisfied with their visit.",
