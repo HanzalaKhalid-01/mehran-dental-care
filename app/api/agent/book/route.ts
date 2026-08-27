@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { validateBookingPayload } from "@/lib/agent/validate";
 
-export const runtime = "edge";
+export const runtime = "nodejs";
 
 const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
 const recentPhones = new Map<string, number>();
