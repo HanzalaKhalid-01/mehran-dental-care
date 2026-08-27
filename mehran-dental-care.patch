@@ -1,690 +1,414 @@
-diff --git a/components/appointments/AppointmentForm.tsx b/components/appointments/AppointmentForm.tsx
-index 0b6a793..685f749 100644
---- a/components/appointments/AppointmentForm.tsx
-+++ b/components/appointments/AppointmentForm.tsx
-@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/Input";
- import { PatientCombobox } from "@/components/ui/PatientCombobox";
- import { OfflineNotice } from "@/components/offline/OfflineNotice";
- import { useOnlineStatus } from "@/lib/offline/useOnlineStatus";
-+import { useOfflineQueue } from "@/lib/offline/useOfflineQueue";
- 
- export function AppointmentForm({
-   patients,
-@@ -16,17 +17,39 @@ export function AppointmentForm({
- }) {
-   const router = useRouter();
-   const { isOffline } = useOnlineStatus();
-+  const { queue } = useOfflineQueue();
-   const [patientId, setPatientId] = useState("");
-   const [dateTime, setDateTime] = useState("");
-   const [notes, setNotes] = useState("");
-   const [saving, setSaving] = useState(false);
-   const [error, setError] = useState<string | null>(null);
-+  const [queued, setQueued] = useState(false);
- 
-   async function handleSubmit(e: React.FormEvent) {
-     e.preventDefault();
--    if (isOffline) return;
-     setSaving(true);
-     setError(null);
-+    setQueued(false);
-+
-+    if (isOffline) {
-+      // Queue for later sync
-+      const patient = patients.find((p) => p.id === patientId);
-+      queue(
-+        `Appointment — ${patient?.full_name ?? "Unknown"} at ${dateTime}`,
-+        {
-+          type: "appointment",
-+          patientId,
-+          scheduledAt: new Date(dateTime).toISOString(),
-+          notes: notes || null,
-+        }
-+      );
-+      setPatientId("");
-+      setDateTime("");
-+      setNotes("");
-+      setSaving(false);
-+      setQueued(true);
-+      return;
-+    }
- 
-     const supabase = createClient();
-     const { error: insertError } = await supabase.from("appointments").insert({
-@@ -74,9 +97,14 @@ export function AppointmentForm({
-         />
-       </div>
-       <OfflineNotice />
-+      {queued && (
-+        <p className="text-sm text-amber-700 dark:text-amber-300 font-medium">
-+          ✓ Appointment saved offline — it will sync automatically when you reconnect.
-+        </p>
-+      )}
-       {error && <p className="text-sm text-destructive">{error}</p>}
--      <Button type="submit" loading={saving} disabled={isOffline}>
--        {saving ? "Booking..." : "Book appointment"}
-+      <Button type="submit" loading={saving}>
-+        {saving ? "Booking..." : isOffline ? "Save offline" : "Book appointment"}
-       </Button>
-     </form>
-   );
-diff --git a/components/auth/LoginForm.tsx b/components/auth/LoginForm.tsx
-index 7e35389..1fd5e30 100644
---- a/components/auth/LoginForm.tsx
-+++ b/components/auth/LoginForm.tsx
-@@ -2,6 +2,7 @@
- 
- import { useState } from "react";
- import { useRouter } from "next/navigation";
-+import { Eye, EyeOff } from "lucide-react";
- import { createClient } from "@/lib/supabase/client";
- import { Button } from "@/components/ui/Button";
- import { Input } from "@/components/ui/Input";
-@@ -13,6 +14,7 @@ export function LoginForm() {
-   const { isOffline } = useOnlineStatus();
-   const [email, setEmail] = useState("");
-   const [password, setPassword] = useState("");
-+  const [showPassword, setShowPassword] = useState(false);
-   const [error, setError] = useState<string | null>(null);
-   const [loading, setLoading] = useState(false);
- 
-@@ -54,10 +56,24 @@ export function LoginForm() {
-       <Input
-         label="Password"
-         required
--        type="password"
-+        type={showPassword ? "text" : "password"}
-         value={password}
-         onChange={(e) => setPassword(e.target.value)}
-         autoComplete="current-password"
-+        rightElement={
-+          <button
-+            type="button"
-+            tabIndex={-1}
-+            aria-label={showPassword ? "Hide password" : "Show password"}
-+            onClick={() => setShowPassword((v) => !v)}
-+            className="text-muted-foreground hover:text-foreground transition-colors focus:outline-none"
-+          >
-+            {showPassword
-+              ? <EyeOff className="h-4 w-4" />
-+              : <Eye className="h-4 w-4" />
-+            }
-+          </button>
-+        }
-       />
- 
-       <OfflineNotice />
-diff --git a/components/offline/OfflineBanner.tsx b/components/offline/OfflineBanner.tsx
-index e1b84cd..3c06a30 100644
---- a/components/offline/OfflineBanner.tsx
-+++ b/components/offline/OfflineBanner.tsx
-@@ -1,57 +1,88 @@
+diff --git a/components/agent/ChatAgent.tsx b/components/agent/ChatAgent.tsx
+index cfee1b6..5f2468c 100644
+--- a/components/agent/ChatAgent.tsx
++++ b/components/agent/ChatAgent.tsx
+@@ -1,6 +1,6 @@
  "use client";
  
- import { useOnlineStatus } from "@/lib/offline/useOnlineStatus";
--import { WifiOff, Wifi, X } from "lucide-react";
-+import { useOfflineQueue } from "@/lib/offline/useOfflineQueue";
-+import { WifiOff, Wifi, Loader2, AlertTriangle, X } from "lucide-react";
- import { useState, useEffect } from "react";
+-import { useState, useRef, useEffect } from "react";
++import { useState, useRef, useEffect, useCallback } from "react";
+ import { usePathname } from "next/navigation";
+ import { MessageCircle, X, Send, Loader2 } from "lucide-react";
+ import { CLINIC } from "@/lib/agent/clinic";
+@@ -12,15 +12,103 @@ import {
+ } from "@/lib/agent/validate";
  
--/**
-- * Sticky banner shown across the portal when the device is offline,
-- * plus a short "back online" confirmation when connectivity returns.
-- */
- export function OfflineBanner() {
-   const { isOnline, wasOffline, isOffline } = useOnlineStatus();
--  const [dismissedOnline, setDismissedOnline] = useState(false);
-+  const { pendingCount, syncState } = useOfflineQueue();
-+  const [dismissed, setDismissed] = useState(false);
+ type Step = "idle" | "name" | "phone" | "preferred" | "treatment" | "done";
+-
+-type Message = {
+-  id: number;
+-  role: "agent" | "user";
+-  text: string;
+-};
++type Message = { id: number; role: "agent" | "user"; text: string };
  
--  // Reset dismiss when we go offline again
+ const WELCOME =
+-  `Assalam o Alaikum! Welcome to ${CLINIC.name}.\n\nI can help with our hours, location, services, or request an appointment for you.\n\nHow can I help today?`;
++  `Assalam o Alaikum! 👋 Welcome to ${CLINIC.name}.\n\nI can help with our hours, location, services, or book an appointment for you.\n\nHow can I help today?`;
++
++// ─── Fuzzy helpers ────────────────────────────────────────────────────────────
++
++/** Normalise a string: lowercase, collapse whitespace, strip punctuation */
++function norm(s: string) {
++  return s.toLowerCase().replace(/[^\w\s]/g, " ").replace(/\s+/g, " ").trim();
++}
++
++/** True if any of the keywords (or close variants) appear in the text */
++function fuzzy(text: string, keywords: string[]): boolean {
++  const t = norm(text);
++  return keywords.some((kw) => {
++    // exact match first
++    if (t.includes(kw)) return true;
++    // stem: match if text contains the stem of the keyword (min 4 chars)
++    const stem = kw.slice(0, Math.max(4, kw.length - 2));
++    if (stem.length >= 4 && t.includes(stem)) return true;
++    // split into words and check each word with simple edit-distance ≤ 1
++    return t.split(" ").some((word) => levenshtein(word, kw) <= 1 && kw.length > 3);
++  });
++}
++
++/** Levenshtein distance (capped at 2 for performance) */
++function levenshtein(a: string, b: string): number {
++  if (Math.abs(a.length - b.length) > 2) return 99;
++  const dp: number[][] = Array.from({ length: a.length + 1 }, (_, i) =>
++    Array.from({ length: b.length + 1 }, (_, j) => (i === 0 ? j : j === 0 ? i : 0))
++  );
++  for (let i = 1; i <= a.length; i++)
++    for (let j = 1; j <= b.length; j++)
++      dp[i][j] =
++        a[i - 1] === b[j - 1]
++          ? dp[i - 1][j - 1]
++          : 1 + Math.min(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1]);
++  return dp[a.length][b.length];
++}
++
++// ─── General intent handler ───────────────────────────────────────────────────
++
++function handleGeneral(text: string): string | null {
++  const t = norm(text);
++
++  // Greetings — including Urdu/Pakistani variants
++  const greetings = [
++    "hi","hello","hey","helo","hii","salam","salaam",
++    "assalam","aoa","walaikum","walaykum","assalamu",
++    "alaikum","alaykom","peace","good morning","good evening",
++    "good afternoon","goodmorning","goodevening",
++  ];
++  if (fuzzy(t, greetings)) {
++    return WELCOME;
++  }
++
++  // Hours / timing
++  if (fuzzy(t, ["hour","hours","time","open","close","shift","when","timing","schedule","work"])) {
++    return `We are open most days:\n• Morning: 12:00–4:00 PM\n• Evening: 7:15–11:00 PM\n\nWould you like to request an appointment?`;
++  }
++
++  // Location
++  if (fuzzy(t, ["where","location","address","map","direction","latifabad","hyderabad","find","come","how to reach"])) {
++    return `We are on Market Road, Latifabad Unit 10, Hyderabad.\n\nYou can also message us on WhatsApp ${CLINIC.whatsapp} for directions.`;
++  }
++
++  // Services
++  if (fuzzy(t, ["service","treatment","offer","provide","what do you","do you do","procedure","capability"])) {
++    return `We offer:\n${CLINIC.services.map((s) => `• ${s}`).join("\n")}\n\nWould you like to request an appointment?`;
++  }
++
++  // Doctors
++  if (fuzzy(t, ["doctor","dentist","usama","wajeeha","dr","staff","who","specialist"])) {
++    return `Our doctors are Dr. Usama and Dr. Wajeeha.\n\nWould you like to request an appointment?`;
++  }
++
++  // Booking intent
++  if (fuzzy(t, ["book","appointment","slot","visit","come","schedule","request","fix","reserve","consult"])) {
++    return null; // trigger booking flow
++  }
++
++  // Price
++  if (fuzzy(t, ["price","cost","fee","charge","how much","rate","expensive","cheap","afford"])) {
++    return `I can't give prices here. Please message us directly on WhatsApp ${CLINIC.whatsapp} and the team will help you.`;
++  }
++
++  // Medical advice
++  if (fuzzy(t, ["pain","advice","diagnos","medic","should i","treatment for","hurts","hurt","ache","bleed","swell"])) {
++    return `I can't give medical advice. Please message the clinic on WhatsApp ${CLINIC.whatsapp} so the doctors can help you properly.`;
++  }
++
++  // Fallback
++  return `I can help with our hours, location, services, or book an appointment.\n\nYou can also message us directly on WhatsApp ${CLINIC.whatsapp}.`;
++}
++
++// ─── Component ────────────────────────────────────────────────────────────────
+ 
+ export function ChatAgent() {
+   const pathname = usePathname();
+@@ -31,18 +119,13 @@ export function ChatAgent() {
+   ]);
+   const [input, setInput] = useState("");
+   const [loading, setLoading] = useState(false);
+-  const [data, setData] = useState({
+-    full_name: "",
+-    phone: "",
+-    preferred: "",
+-    treatment: "",
+-  });
++  const [data, setData] = useState({ full_name: "", phone: "", preferred: "", treatment: "" });
+ 
+   const bottomRef = useRef<HTMLDivElement>(null);
+   const inputRef = useRef<HTMLInputElement>(null);
+-  const nextId = useRef(2);          // ← move this up here
++  const chatRef = useRef<HTMLDivElement>(null);
++  const nextId = useRef(2);
+ 
+-  // All hooks must be above this line
    useEffect(() => {
--    if (isOffline) setDismissedOnline(false);
-+    if (isOffline) setDismissed(false);
-   }, [isOffline]);
+     if (open) {
+       bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+@@ -50,44 +133,33 @@ export function ChatAgent() {
+     }
+   }, [open, messages, loading]);
  
--  // Offline state — persistent until back online
-+  // ── Offline ────────────────────────────────────────────────────────────────
-   if (isOffline) {
-     return (
--      <div
--        role="status"
--        aria-live="polite"
--        className="sticky top-0 z-50 w-full bg-amber-500 text-amber-950 dark:bg-amber-600 dark:text-amber-50"
--      >
-+      <div role="status" aria-live="polite"
-+        className="sticky top-0 z-50 w-full bg-amber-500 text-amber-950 dark:bg-amber-600 dark:text-amber-50">
-         <div className="mx-auto max-w-7xl px-4 py-2.5 flex items-center justify-center gap-2.5 text-sm font-medium">
-           <WifiOff className="h-4 w-4 shrink-0" aria-hidden />
-           <span>
--            You&apos;re offline. Changes cannot be saved until you reconnect to the internet.
-+            You&apos;re offline.
-+            {pendingCount > 0
-+              ? ` ${pendingCount} ${pendingCount === 1 ? "change" : "changes"} saved locally — will sync when you reconnect.`
-+              : " New entries will be saved locally and synced when you reconnect."}
-           </span>
-         </div>
-       </div>
-     );
+-  // Now it is safe to return early
+-  if (pathname?.startsWith("/portal")) {
+-    return null;
+-  }
++  // Close on click/touch outside the chat window
++  useEffect(() => {
++    if (!open) return;
++    function handleOutside(e: MouseEvent | TouchEvent) {
++      if (chatRef.current && !chatRef.current.contains(e.target as Node)) {
++        setOpen(false);
++      }
++    }
++    // Small delay so the open-button click doesn't immediately close it
++    const t = setTimeout(() => {
++      document.addEventListener("mousedown", handleOutside);
++      document.addEventListener("touchstart", handleOutside);
++    }, 50);
++    return () => {
++      clearTimeout(t);
++      document.removeEventListener("mousedown", handleOutside);
++      document.removeEventListener("touchstart", handleOutside);
++    };
++  }, [open]);
++
++  if (pathname?.startsWith("/portal")) return null;
+ 
+   function addMessage(role: "agent" | "user", text: string) {
+     const id = nextId.current++;
+     setMessages((prev) => [...prev, { id, role, text }]);
    }
  
--  // Briefly show "back online" after reconnect
--  if (wasOffline && !dismissedOnline) {
-+  // ── Syncing queued ops ─────────────────────────────────────────────────────
-+  if (syncState === "syncing") {
-     return (
--      <div
--        role="status"
--        aria-live="polite"
--        className="sticky top-0 z-50 w-full bg-emerald-600 text-white"
--      >
-+      <div role="status" aria-live="polite"
-+        className="sticky top-0 z-50 w-full bg-primary text-primary-foreground">
-+        <div className="mx-auto max-w-7xl px-4 py-2.5 flex items-center justify-center gap-2.5 text-sm font-medium">
-+          <Loader2 className="h-4 w-4 shrink-0 animate-spin" aria-hidden />
-+          <span>Syncing {pendingCount} offline {pendingCount === 1 ? "change" : "changes"}…</span>
-+        </div>
-+      </div>
-+    );
+-  function handleGeneral(text: string): string | null {
+-    const lower = text.toLowerCase();
+-
+-    if (/hour|time|open|shift|when/.test(lower)) {
+-      return `We are open most days:\n• Morning: 12:00–4:00 PM\n• Evening: 7:15–11:00 PM\n\nWould you like to request an appointment?`;
+-    }
+-    if (/where|location|address|map|latifabad|hyderabad/.test(lower)) {
+-      return `We are on Market Road, Latifabad Unit 10, Hyderabad.\n\nYou can also message us on WhatsApp ${CLINIC.whatsapp} for directions.`;
+-    }
+-    if (/service|treatment|do you|what do you|offer|provide/.test(lower)) {
+-      return `We offer:\n${CLINIC.services.map((s) => `• ${s}`).join("\n")}\n\nWould you like to request an appointment?`;
+-    }
+-    if (/doctor|dentist|usama|wajeeha|who/.test(lower)) {
+-      return `Our doctors are Dr. Usama and Dr. Wajeeha.\n\nWould you like to request an appointment?`;
+-    }
+-    if (/book|appointment|slot|visit|come|schedule|request/.test(lower)) {
+-      return null; // trigger booking flow
+-    }
+-    if (/price|cost|fee|how much|charge/.test(lower)) {
+-      return `I cannot give prices here. Please message us directly on WhatsApp ${CLINIC.whatsapp} and the team will help you.`;
+-    }
+-    if (/pain|advice|diagnos|medic|should i|treatment for/.test(lower)) {
+-      return `I cannot give medical advice. Please message the clinic on WhatsApp ${CLINIC.whatsapp} so the doctors can help you properly.`;
+-    }
+-
+-    return `I can help with our hours, location, services, or request an appointment.\n\nYou can also message us directly on WhatsApp ${CLINIC.whatsapp}.`;
+-  }
+-
+   async function submitBooking(finalData: typeof data) {
+     setLoading(true);
+     try {
+@@ -96,29 +168,19 @@ export function ChatAgent() {
+         headers: { "Content-Type": "application/json" },
+         body: JSON.stringify(finalData),
+       });
+-
+       const json = await res.json();
+-
+       if (!res.ok) {
+-        addMessage(
+-          "agent",
+-          json.error ||
+-            `Something went wrong. Please message us on WhatsApp ${CLINIC.whatsapp}.`
+-        );
++        addMessage("agent", json.error || `Something went wrong. Please message us on WhatsApp ${CLINIC.whatsapp}.`);
+         setStep("idle");
+         return;
+       }
+-
+       addMessage(
+         "agent",
+-        `Thank you, ${finalData.full_name}!\n\nWe have noted your request for “${finalData.treatment}” (${finalData.preferred}).\n\nOur team will confirm the exact slot with you on WhatsApp shortly.\n\nYou can also message us anytime at ${CLINIC.whatsapp}. Take care!`
++        `Thank you, ${finalData.full_name}! ✅\n\nWe've noted your request for "${finalData.treatment}" (${finalData.preferred}).\n\nOur team will confirm the exact slot with you on WhatsApp shortly.\n\nYou can also message us anytime at ${CLINIC.whatsapp}. Take care!`
+       );
+       setStep("done");
+     } catch {
+-      addMessage(
+-        "agent",
+-        `Could not send the request. Please message us directly on WhatsApp ${CLINIC.whatsapp}.`
+-      );
++      addMessage("agent", `Could not send the request. Please message us directly on WhatsApp ${CLINIC.whatsapp}.`);
+       setStep("idle");
+     } finally {
+       setLoading(false);
+@@ -128,15 +190,11 @@ export function ChatAgent() {
+   async function handleSend() {
+     const text = input.trim();
+     if (!text || loading) return;
+-
+     setInput("");
+     addMessage("user", text);
+ 
+     if (step === "done") {
+-      addMessage(
+-        "agent",
+-        `Your request is already with the team. For anything else please message us on WhatsApp ${CLINIC.whatsapp}.`
+-      );
++      addMessage("agent", `Your request is already with the team. For anything else please message us on WhatsApp ${CLINIC.whatsapp}.`);
+       return;
+     }
+ 
+@@ -147,59 +205,47 @@ export function ChatAgent() {
+         return;
+       }
+       setStep("name");
+-      addMessage("agent", "I’d be happy to help you request an appointment.\n\nMay I please have your full name?");
++      addMessage("agent", "I'd be happy to help you request an appointment. 😊\n\nMay I please have your full name?");
+       return;
+     }
+ 
+     if (step === "name") {
+       if (!isValidFullName(text)) {
+-        addMessage("agent", "Please enter a valid full name (at least 2 characters).");
++        addMessage("agent", "I need your name to proceed — please share your full name (at least 2 characters).");
+         return;
+       }
+       setData((d) => ({ ...d, full_name: text.trim() }));
+       setStep("phone");
+-      addMessage(
+-        "agent",
+-        `Thank you, ${text.trim()}.\n\nPlease share your WhatsApp number (Pakistani mobile, e.g. 03XX XXXXXXX).`
+-      );
++      addMessage("agent", `Thank you, ${text.trim()}. 👍\n\nPlease share your WhatsApp number so we can confirm your slot.\n(Pakistani mobile, e.g. 0335 2411106)`);
+       return;
+     }
+ 
+     if (step === "phone") {
+       const phone = normalizePakistaniPhone(text);
+       if (!phone) {
+-        addMessage(
+-          "agent",
+-          "That doesn’t look like a valid Pakistani mobile number. Please try again (e.g. 0335 2411106)."
+-        );
++        addMessage("agent", "I didn't quite catch that number. Please share a valid Pakistani mobile number — e.g. 0335 2411106 or +923352411106.");
+         return;
+       }
+       setData((d) => ({ ...d, phone }));
+       setStep("preferred");
+-      addMessage(
+-        "agent",
+-        "Got it. Which day and shift do you prefer?\n\n(Morning 12:00–4:00 PM or Evening 7:15–11:00 PM)"
+-      );
++      addMessage("agent", "Got it! 📅 Which day and time works best for you?\n\n• Morning: 12:00–4:00 PM\n• Evening: 7:15–11:00 PM\n\n(e.g. \"Tomorrow evening\" or \"Saturday morning\")");
+       return;
+     }
+ 
+     if (step === "preferred") {
+       if (!isValidPreferred(text)) {
+-        addMessage("agent", "Please tell us a preferred day and shift (morning or evening).");
++        addMessage("agent", "Could you clarify when you'd like to come? For example: \"Tomorrow evening\" or \"Friday morning\".");
+         return;
+       }
+       setData((d) => ({ ...d, preferred: text.trim() }));
+       setStep("treatment");
+-      addMessage(
+-        "agent",
+-        "Perfect. What treatment do you need, or would you like a checkup?"
+-      );
++      addMessage("agent", "Almost there! 🦷 What treatment do you need, or would you like a general checkup?");
+       return;
+     }
+ 
+     if (step === "treatment") {
+       if (!isValidTreatment(text)) {
+-        addMessage("agent", "Please tell us the treatment or simply write “checkup”.");
++        addMessage("agent", "Could you tell us what treatment you need? Even just \"checkup\" or \"cleaning\" works fine.");
+         return;
+       }
+       const final = { ...data, treatment: text.trim() };
+@@ -216,26 +262,28 @@ export function ChatAgent() {
+     }
+   }
+ 
+-function resetChat() {
+-  setStep("idle");
+-  setData({ full_name: "", phone: "", preferred: "", treatment: "" });
+-  nextId.current = 2;
+-  setMessages([{ id: 1, role: "agent", text: WELCOME }]);
+-  setInput("");
+-}
++  function resetChat() {
++    setStep("idle");
++    setData({ full_name: "", phone: "", preferred: "", treatment: "" });
++    nextId.current = 2;
++    setMessages([{ id: 1, role: "agent", text: WELCOME }]);
++    setInput("");
 +  }
 +
-+  if (syncState === "partial") {
-+    return (
-+      <div role="status" aria-live="polite"
-+        className="sticky top-0 z-50 w-full bg-destructive text-destructive-foreground">
-+        <div className="mx-auto max-w-7xl px-4 py-2.5 flex items-center justify-center gap-2.5 text-sm font-medium">
-+          <AlertTriangle className="h-4 w-4 shrink-0" aria-hidden />
-+          <span>Some changes couldn&apos;t sync — they&apos;ll retry next time you reconnect.</span>
-+        </div>
-+      </div>
-+    );
-+  }
-+
-+  // ── Back online (no queued ops or all synced) ──────────────────────────────
-+  if (wasOffline && syncState === "done" && !dismissed) {
-+    return (
-+      <div role="status" aria-live="polite"
-+        className="sticky top-0 z-50 w-full bg-emerald-600 text-white">
-+        <div className="mx-auto max-w-7xl px-4 py-2.5 flex items-center justify-center gap-2.5 text-sm font-medium">
-+          <Wifi className="h-4 w-4 shrink-0" aria-hidden />
-+          <span>Back online — all offline changes have been saved.</span>
-+          <button type="button" onClick={() => setDismissed(true)}
-+            className="ml-2 p-0.5 rounded hover:bg-white/20 transition" aria-label="Dismiss">
-+            <X className="h-3.5 w-3.5" />
-+          </button>
-+        </div>
-+      </div>
-+    );
-+  }
-+
-+  if (wasOffline && !dismissed) {
-+    return (
-+      <div role="status" aria-live="polite"
-+        className="sticky top-0 z-50 w-full bg-emerald-600 text-white">
-         <div className="mx-auto max-w-7xl px-4 py-2.5 flex items-center justify-center gap-2.5 text-sm font-medium">
-           <Wifi className="h-4 w-4 shrink-0" aria-hidden />
--          <span>You&apos;re back online. You can save changes again.</span>
--          <button
--            type="button"
--            onClick={() => setDismissedOnline(true)}
--            className="ml-2 p-0.5 rounded hover:bg-white/20 transition"
--            aria-label="Dismiss"
--          >
-+          <span>You&apos;re back online.</span>
-+          <button type="button" onClick={() => setDismissed(true)}
-+            className="ml-2 p-0.5 rounded hover:bg-white/20 transition" aria-label="Dismiss">
-             <X className="h-3.5 w-3.5" />
-           </button>
-         </div>
-diff --git a/components/offline/OfflineNotice.tsx b/components/offline/OfflineNotice.tsx
-index 6588575..b10ebcf 100644
---- a/components/offline/OfflineNotice.tsx
-+++ b/components/offline/OfflineNotice.tsx
-@@ -1,20 +1,17 @@
- "use client";
- 
- import { useOnlineStatus } from "@/lib/offline/useOnlineStatus";
-+import { useOfflineQueue } from "@/lib/offline/useOfflineQueue";
- import { WifiOff } from "lucide-react";
- 
--/**
-- * Inline notice for forms / mutation UIs.
-- * Place near submit buttons so users understand why save is disabled.
-- */
- export function OfflineNotice({ className = "" }: { className?: string }) {
-   const { isOffline } = useOnlineStatus();
-+  const { pendingCount } = useOfflineQueue();
- 
-   if (!isOffline) return null;
- 
    return (
--    <div
--      role="alert"
-+    <div role="alert"
-       className={`
-         flex items-start gap-2.5 rounded-xl border border-amber-500/30
-         bg-amber-500/10 px-3.5 py-3 text-sm text-amber-900 dark:text-amber-100
-@@ -23,10 +20,11 @@ export function OfflineNotice({ className = "" }: { className?: string }) {
-     >
-       <WifiOff className="h-4 w-4 shrink-0 mt-0.5" aria-hidden />
-       <div>
--        <p className="font-medium">You&apos;re offline</p>
-+        <p className="font-medium">You&apos;re offline — your entry will be saved locally</p>
-         <p className="text-amber-800/80 dark:text-amber-100/80 mt-0.5">
--          Connect to the internet to save these details. Your entries on this
--          screen are not stored until you&apos;re back online.
-+          {pendingCount > 0
-+            ? `You have ${pendingCount} ${pendingCount === 1 ? "entry" : "entries"} waiting to sync. This one will be added to the queue and uploaded as soon as you reconnect.`
-+            : "This entry will be stored on this device and automatically uploaded to the system when your internet is restored."}
-         </p>
-       </div>
-     </div>
-diff --git a/components/portal/PortalNav.tsx b/components/portal/PortalNav.tsx
-index c031abf..5261eab 100644
---- a/components/portal/PortalNav.tsx
-+++ b/components/portal/PortalNav.tsx
-@@ -96,6 +96,8 @@ function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
- export function PortalNav() {
-   const [open, setOpen] = useState(false);
-   const pathname = usePathname();
-+  const { newAppointments, pendingReviews } = usePortalCounts();
-+  const totalPending = newAppointments + pendingReviews;
+-    <>
++    // Wrap both the button and the window so outside-click works correctly
++    <div ref={chatRef} className="fixed bottom-5 right-5 z-50">
+       <button
+         type="button"
+         onClick={() => setOpen((v) => !v)}
+-        className="fixed bottom-5 right-5 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-teal-600 text-white shadow-lg transition hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-400 focus:ring-offset-2"
++        className="flex h-14 w-14 items-center justify-center rounded-full bg-teal-600 text-white shadow-lg transition hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-400 focus:ring-offset-2"
+         aria-label={open ? "Close chat" : "Open chat with Mehran Dental Care"}
+       >
+         {open ? <X className="h-6 w-6" /> : <MessageCircle className="h-6 w-6" />}
+       </button>
  
-   useEffect(() => {
-     setOpen(false);
-@@ -117,9 +119,15 @@ export function PortalNav() {
-             type="button"
-             aria-label={open ? "Close menu" : "Open menu"}
-             onClick={() => setOpen((v) => !v)}
--            className="p-2 -ml-2 rounded-lg hover:bg-sidebar-hover transition"
-+            className="relative p-2 -ml-2 rounded-lg hover:bg-sidebar-hover transition"
-           >
-             {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-+            {!open && totalPending > 0 && (
-+              <span className="absolute top-1.5 right-1.5 flex h-2 w-2">
-+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-destructive opacity-75" />
-+                <span className="relative inline-flex rounded-full h-2 w-2 bg-destructive" />
-+              </span>
-+            )}
-           </button>
-           <span className="font-semibold text-sm tracking-tight">Mehran Dental</span>
+       {open && (
+-        <div className="fixed bottom-24 right-5 z-50 flex h-[min(520px,70vh)] w-[min(380px,calc(100vw-2.5rem))] flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl dark:border-slate-700 dark:bg-slate-900">
++        <div className="absolute bottom-16 right-0 flex h-[min(520px,70vh)] w-[min(380px,calc(100vw-2.5rem))] flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl dark:border-slate-700 dark:bg-slate-900">
+           <div className="flex items-center justify-between bg-teal-600 px-4 py-3 text-white">
+             <div>
+               <p className="font-semibold leading-tight">{CLINIC.name}</p>
+@@ -252,10 +300,7 @@ function resetChat() {
+ 
+           <div className="flex-1 space-y-3 overflow-y-auto px-3 py-4">
+             {messages.map((m) => (
+-              <div
+-                key={m.id}
+-                className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}
+-              >
++              <div key={m.id} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
+                 <div
+                   className={`max-w-[85%] whitespace-pre-wrap rounded-2xl px-3.5 py-2 text-sm leading-relaxed ${
+                     m.role === "user"
+@@ -288,17 +333,12 @@ function resetChat() {
+                 onKeyDown={handleKeyDown}
+                 disabled={loading || step === "done"}
+                 placeholder={
+-                  step === "done"
+-                    ? "Request sent"
+-                    : step === "name"
+-                      ? "Your full name…"
+-                      : step === "phone"
+-                        ? "03XX XXXXXXX"
+-                        : step === "preferred"
+-                          ? "e.g. Tomorrow evening"
+-                          : step === "treatment"
+-                            ? "e.g. Scaling or checkup"
+-                            : "Type a message…"
++                  step === "done" ? "Request sent ✓" :
++                  step === "name" ? "Your full name…" :
++                  step === "phone" ? "03XX XXXXXXX" :
++                  step === "preferred" ? "e.g. Tomorrow evening" :
++                  step === "treatment" ? "e.g. Scaling or checkup" :
++                  "Type a message…"
+                 }
+                 className="flex-1 rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 disabled:opacity-60 dark:border-slate-600 dark:bg-slate-800 dark:text-white"
+               />
+@@ -318,6 +358,6 @@ function resetChat() {
+           </div>
          </div>
-diff --git a/components/ui/Input.tsx b/components/ui/Input.tsx
-index f682430..e2e9e13 100644
---- a/components/ui/Input.tsx
-+++ b/components/ui/Input.tsx
-@@ -1,15 +1,17 @@
- "use client";
- 
--import { forwardRef, type InputHTMLAttributes } from "react";
-+import { forwardRef, type InputHTMLAttributes, type ReactNode } from "react";
- 
- type Props = InputHTMLAttributes<HTMLInputElement> & {
-   label?: string;
-   error?: string;
-   hint?: string;
-+  /** Element rendered inside the input on the right (e.g. a show/hide toggle). */
-+  rightElement?: ReactNode;
- };
- 
- export const Input = forwardRef<HTMLInputElement, Props>(
--  ({ className = "", label, error, hint, id, ...props }, ref) => {
-+  ({ className = "", label, error, hint, id, rightElement, ...props }, ref) => {
-     const inputId = id || (label ? label.toLowerCase().replace(/\s+/g, "-") : undefined);
- 
-     return (
-@@ -23,21 +25,29 @@ export const Input = forwardRef<HTMLInputElement, Props>(
-             {props.required && <span className="text-destructive ml-0.5">*</span>}
-           </label>
-         )}
--        <input
--          ref={ref}
--          id={inputId}
--          className={`
--            w-full h-10 rounded-xl border bg-card px-3.5 text-sm
--            text-foreground placeholder:text-muted-foreground
--            border-border
--            transition-colors
--            focus:outline-none focus:ring-2 focus:ring-ring/30 focus:border-primary
--            disabled:opacity-50 disabled:cursor-not-allowed
--            ${error ? "border-destructive focus:ring-destructive/30 focus:border-destructive" : ""}
--            ${className}
--          `}
--          {...props}
--        />
-+        <div className="relative">
-+          <input
-+            ref={ref}
-+            id={inputId}
-+            className={`
-+              w-full h-10 rounded-xl border bg-card px-3.5 text-sm
-+              text-foreground placeholder:text-muted-foreground
-+              border-border
-+              transition-colors
-+              focus:outline-none focus:ring-2 focus:ring-ring/30 focus:border-primary
-+              disabled:opacity-50 disabled:cursor-not-allowed
-+              ${rightElement ? "pr-10" : ""}
-+              ${error ? "border-destructive focus:ring-destructive/30 focus:border-destructive" : ""}
-+              ${className}
-+            `}
-+            {...props}
-+          />
-+          {rightElement && (
-+            <div className="absolute inset-y-0 right-0 flex items-center pr-3">
-+              {rightElement}
-+            </div>
-+          )}
-+        </div>
-         {error && <p className="text-xs text-destructive">{error}</p>}
-         {hint && !error && <p className="text-xs text-muted-foreground">{hint}</p>}
-       </div>
-diff --git a/components/walk-in/WalkInForm.tsx b/components/walk-in/WalkInForm.tsx
-index 713c9bc..ef5b2b0 100644
---- a/components/walk-in/WalkInForm.tsx
-+++ b/components/walk-in/WalkInForm.tsx
-@@ -11,6 +11,7 @@ import { Card, CardHeader, CardTitle } from "@/components/ui/Card";
- import { UserPlus, Receipt, CheckCircle2 } from "lucide-react";
- import { OfflineNotice } from "@/components/offline/OfflineNotice";
- import { useOnlineStatus } from "@/lib/offline/useOnlineStatus";
-+import { useOfflineQueue } from "@/lib/offline/useOfflineQueue";
- 
- type PatientOption = { id: string; full_name: string; phone: string };
- 
-@@ -25,6 +26,7 @@ const PAYMENT_METHODS = [
- export function WalkInForm({ existingPatients }: { existingPatients: PatientOption[] }) {
-   const router = useRouter();
-   const { isOffline } = useOnlineStatus();
-+  const { queue } = useOfflineQueue();
-   const [mode, setMode] = useState<"new" | "existing">("new");
- 
-   // Patient fields
-@@ -46,11 +48,52 @@ export function WalkInForm({ existingPatients }: { existingPatients: PatientOpti
- 
-   async function handleSubmit(e: React.FormEvent) {
-     e.preventDefault();
--    if (isOffline) return;
-     setSaving(true);
-     setError(null);
-     setSuccess(null);
- 
-+    // ── Offline: queue and return ──────────────────────────────────────────
-+    if (isOffline) {
-+      if (mode === "new" && (!fullName.trim() || !phone.trim())) {
-+        setError("Patient name and phone are required.");
-+        setSaving(false);
-+        return;
-+      }
-+      if (mode === "existing" && !patientId) {
-+        setError("Please select an existing patient.");
-+        setSaving(false);
-+        return;
-+      }
-+      const total = Number(amount);
-+      if (!description.trim() || !total || total <= 0) {
-+        setError("Treatment description and a valid amount are required.");
-+        setSaving(false);
-+        return;
-+      }
-+      queue(
-+        `Walk-in — ${mode === "new" ? fullName.trim() : "Existing patient"} · Rs. ${total}`,
-+        {
-+          type: "walk_in",
-+          mode,
-+          patientId,
-+          fullName: fullName.trim(),
-+          phone: phone.trim(),
-+          gender,
-+          dob,
-+          description: description.trim(),
-+          amount: total,
-+          markPaid,
-+          paymentMethod,
-+        }
-+      );
-+      setSaving(false);
-+      setSuccess("Saved offline — will sync automatically when you reconnect.");
-+      setFullName(""); setPhone(""); setGender(""); setDob(""); setPatientId("");
-+      setDescription(""); setAmount(""); setMarkPaid(true); setPaymentMethod("cash");
-+      return;
-+    }
-+    // ── Online: proceed as normal ──────────────────────────────────────────
-+
-     const supabase = createClient();
-     let finalPatientId = patientId;
- 
-@@ -317,8 +360,8 @@ export function WalkInForm({ existingPatients }: { existingPatients: PatientOpti
        )}
- 
-       <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
--        <Button type="submit" loading={saving} size="lg" disabled={isOffline} className="w-full sm:w-auto">
--          {saving ? "Saving..." : markPaid ? "Create patient & record payment" : "Create patient & invoice"}
-+        <Button type="submit" loading={saving} size="lg" className="w-full sm:w-auto">
-+          {saving ? "Saving..." : isOffline ? "Save offline" : markPaid ? "Create patient & record payment" : "Create patient & invoice"}
-         </Button>
-         <Button
-           type="button"
-diff --git a/lib/offline/queue.ts b/lib/offline/queue.ts
-new file mode 100644
-index 0000000..1545b8d
---- /dev/null
-+++ b/lib/offline/queue.ts
-@@ -0,0 +1,164 @@
-+/**
-+ * Offline operation queue backed by localStorage.
-+ *
-+ * Supported operation types:
-+ *  - "appointment" : single insert into `appointments`
-+ *  - "walk_in"     : patient (possibly new) + invoice + items + optional payment
-+ *
-+ * Each entry is self-contained — it carries every field needed to replay
-+ * the operation server-side when connectivity is restored.
-+ */
-+
-+import { createClient } from "@/lib/supabase/client";
-+
-+// ─── Types ────────────────────────────────────────────────────────────────────
-+
-+export type AppointmentOp = {
-+  type: "appointment";
-+  patientId: string;
-+  scheduledAt: string;
-+  notes: string | null;
-+};
-+
-+export type WalkInOp = {
-+  type: "walk_in";
-+  // patient
-+  mode: "new" | "existing";
-+  patientId: string;      // existing patient id OR empty string for new
-+  fullName: string;
-+  phone: string;
-+  gender: string;
-+  dob: string;
-+  // invoice
-+  description: string;
-+  amount: number;
-+  markPaid: boolean;
-+  paymentMethod: string;
-+};
-+
-+export type OpData = AppointmentOp | WalkInOp;
-+
-+export type QueueEntry = {
-+  id: string;
-+  label: string;       // human-readable summary shown in the banner
-+  createdAt: number;
-+  data: OpData;
-+};
-+
-+// ─── Storage helpers ──────────────────────────────────────────────────────────
-+
-+const KEY = "mdc_offline_queue";
-+
-+export function readQueue(): QueueEntry[] {
-+  if (typeof window === "undefined") return [];
-+  try {
-+    return JSON.parse(localStorage.getItem(KEY) ?? "[]") as QueueEntry[];
-+  } catch {
-+    return [];
-+  }
-+}
-+
-+function writeQueue(q: QueueEntry[]) {
-+  localStorage.setItem(KEY, JSON.stringify(q));
-+}
-+
-+export function enqueue(label: string, data: OpData): QueueEntry {
-+  const entry: QueueEntry = {
-+    id: `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
-+    label,
-+    createdAt: Date.now(),
-+    data,
-+  };
-+  writeQueue([...readQueue(), entry]);
-+  return entry;
-+}
-+
-+function removeEntry(id: string) {
-+  writeQueue(readQueue().filter((e) => e.id !== id));
-+}
-+
-+// ─── Sync ─────────────────────────────────────────────────────────────────────
-+
-+/**
-+ * Replays all queued operations against Supabase in chronological order.
-+ * Successfully replayed entries are removed from the queue.
-+ * Entries that fail are left in place for the next attempt.
-+ *
-+ * Returns { synced, failed }.
-+ */
-+export async function flushQueue(): Promise<{ synced: number; failed: number }> {
-+  const queue = readQueue();
-+  if (queue.length === 0) return { synced: 0, failed: 0 };
-+
-+  const supabase = createClient();
-+  let synced = 0;
-+  let failed = 0;
-+
-+  for (const entry of queue) {
-+    try {
-+      if (entry.data.type === "appointment") {
-+        const { error } = await supabase.from("appointments").insert({
-+          patient_id: entry.data.patientId,
-+          scheduled_at: entry.data.scheduledAt,
-+          status: "booked",
-+          notes: entry.data.notes,
-+        });
-+        if (error) throw error;
-+      } else if (entry.data.type === "walk_in") {
-+        const d = entry.data;
-+        let finalPatientId = d.patientId;
-+
-+        // Create new patient if needed
-+        if (d.mode === "new") {
-+          const { data: patient, error } = await supabase
-+            .from("patients")
-+            .insert({ full_name: d.fullName, phone: d.phone, gender: d.gender || null, dob: d.dob || null })
-+            .select("id")
-+            .single();
-+          if (error || !patient) throw error ?? new Error("Patient insert failed");
-+          finalPatientId = patient.id;
-+        }
-+
-+        const invoiceNo = `INV-${entry.createdAt}`;
-+        const { data: invoice, error: invError } = await supabase
-+          .from("invoices")
-+          .insert({
-+            patient_id: finalPatientId,
-+            invoice_no: invoiceNo,
-+            subtotal: d.amount,
-+            discount: 0,
-+            tax: 0,
-+            total: d.amount,
-+            status: d.markPaid ? "paid" : "unpaid",
-+          })
-+          .select("id")
-+          .single();
-+        if (invError || !invoice) throw invError ?? new Error("Invoice insert failed");
-+
-+        await supabase.from("invoice_items").insert({
-+          invoice_id: invoice.id,
-+          description: d.description,
-+          qty: 1,
-+          unit_price: d.amount,
-+          line_total: d.amount,
-+        });
-+
-+        if (d.markPaid) {
-+          await supabase.from("payments").insert({
-+            invoice_id: invoice.id,
-+            amount: d.amount,
-+            method: d.paymentMethod,
-+            paid_at: new Date(entry.createdAt).toISOString(),
-+          });
-+        }
-+      }
-+
-+      removeEntry(entry.id);
-+      synced++;
-+    } catch {
-+      failed++;
-+    }
-+  }
-+
-+  return { synced, failed };
-+}
-diff --git a/lib/offline/useOfflineQueue.ts b/lib/offline/useOfflineQueue.ts
-new file mode 100644
-index 0000000..e224132
---- /dev/null
-+++ b/lib/offline/useOfflineQueue.ts
-@@ -0,0 +1,49 @@
-+"use client";
-+
-+import { useCallback, useEffect, useState } from "react";
-+import { enqueue, flushQueue, readQueue, type OpData } from "./queue";
-+import { useOnlineStatus } from "./useOnlineStatus";
-+
-+export type SyncState = "idle" | "syncing" | "done" | "partial";
-+
-+export function useOfflineQueue() {
-+  const { isOnline, wasOffline } = useOnlineStatus();
-+  const [pendingCount, setPendingCount] = useState(0);
-+  const [syncState, setSyncState] = useState<SyncState>("idle");
-+
-+  // Keep pendingCount in sync with localStorage
-+  function refresh() {
-+    setPendingCount(readQueue().length);
-+  }
-+
-+  useEffect(() => {
-+    refresh();
-+    // Refresh whenever storage changes in another tab
-+    window.addEventListener("storage", refresh);
-+    return () => window.removeEventListener("storage", refresh);
-+  }, []);
-+
-+  // Auto-flush when coming back online
-+  useEffect(() => {
-+    if (!isOnline || !wasOffline) return;
-+    if (readQueue().length === 0) return;
-+
-+    setSyncState("syncing");
-+    flushQueue().then(({ synced, failed }) => {
-+      refresh();
-+      setSyncState(failed > 0 ? "partial" : "done");
-+      // Reset after a few seconds
-+      setTimeout(() => setSyncState("idle"), 5000);
-+    });
-+  }, [isOnline, wasOffline]);
-+
-+  const queue = useCallback(
-+    (label: string, data: OpData) => {
-+      enqueue(label, data);
-+      refresh();
-+    },
-+    []
-+  );
-+
-+  return { queue, pendingCount, syncState };
+-    </>
++    </div>
+   );
+-}
+\ No newline at end of file
 +}
